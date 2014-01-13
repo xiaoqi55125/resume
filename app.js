@@ -48,14 +48,15 @@ var app          = express();
 //config for all env
 app.configure(function () {
     app.set('view engine', 'html');
-    app.set('views', path.join(__dirname, 'views'));
+    app.set('views', path.join(__dirname, 'view'));
     app.set("view options", {layout : false});
     app.engine('html', require('ejs').renderFile);
+
 
     //middleware
     app.use(express.compress());
     app.use(express.favicon());
-    
+
     app.use(express.query());
     app.use(express.bodyParser({ uploadDir : "./uploads"}));
 
