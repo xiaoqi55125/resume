@@ -22,3 +22,40 @@
   Desc: the mail service
  */
 
+var mailer    = require("nodemailer");
+var appConfig = require("../config").config;
+
+var transport = mailer.createTransport("SMTP", appConfig.mail_opts);
+
+/**
+ * send mail
+ * @param  {object} mailObj the instance of mail
+ * mail object like :
+ * {
+ *   from : xxx
+ *   to   : xxx
+ *   subject : xxx
+ *   text/html : xxx
+ * }
+ * @return {null}         
+ */
+exports.sendMail = function (mailObj) {
+    debugService("/services/mail/sendMail");
+    if (!mailObj.hasOwnProperty("from")) {
+        mailObj.from = appConfig.mail_opts.auth.user;
+    }
+
+    //if there is no property then use default
+    if (!mailObj.hasOwnProperty("to")) {
+        mailObj.to = appConfig.mailDefault_TO.join(",");
+    }
+
+    debugService("sending mail .....");
+
+    transport.sendMail(mailObj, function (err) {
+        if (err) {
+            console.log("mail error:");
+            console.log(err);
+        }
+    });
+};
