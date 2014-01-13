@@ -23,7 +23,7 @@
   Desc: error handler of application
  */
 
-var mailServie = require("../services/mail");
+var mailServie = require("../service/mail");
 
 /**
  * process app errors

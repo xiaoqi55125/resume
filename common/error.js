@@ -23,7 +23,7 @@
   Desc: Error definition and inherit
  */
 
-var config = require("../config").initConfig();
+var config = require("../config").config;
 
 function BaseError(message) {
     this.name       = "BaseError";
