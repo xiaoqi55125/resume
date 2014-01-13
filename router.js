@@ -23,6 +23,7 @@
  */
 
 var resumeCtrller = require("./controller/resume");
+var resumeRender  = require('./controller/render');
 
 module.exports = function (app) {
 
@@ -37,5 +38,5 @@ module.exports = function (app) {
     app.post("/resume/query", resumeCtrller.query);
     
     //can't mapping router
-    app.get("*", others.fourofour);
+    app.get("*", resumeRender.fourofour);
 };
