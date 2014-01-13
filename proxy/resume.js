@@ -25,6 +25,14 @@
 var models = require("../model");
 var User   = models.User;
 
-
+/**
+ * get resume with query conditions
+ * @param  {Object}   conditions the query's conditions
+ * @param  {Function} callback   the cb func
+ * @return {null}              
+ */
+exports.getResumeWithConditions = function (conditions, callback) {
+    debugProxy("/proxy/resume/getResumeWithConditions");
+};
 
 
