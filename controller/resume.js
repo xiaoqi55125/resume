@@ -22,3 +22,16 @@
   Desc: the controller of resume
  */
 
+var resume = require("../proxy").Resume;
+
+
+/**
+ * query resume with conditions
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.query = function (req, res, next) {
+    debugCtrller("/controller/resume/query");
+};
