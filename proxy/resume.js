@@ -22,5 +22,9 @@
   Desc: the proxy of resume
  */
 
+var models = require("../model");
+var User   = models.User;
+
+
 
 
