@@ -27,8 +27,7 @@ exports.config = {
     /**************************web config****************************/
 
     debug               : true,
-    name                : "资产管理系统",
-    giftname            : "礼物管理系统",
+    name                : "简历管理系统",
     description         : "Fixed Asset Manager",
     version             : "0.0.1",
 
