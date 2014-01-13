@@ -22,3 +22,20 @@
   Desc: the router of urls
  */
 
+var resumeCtrller = require("./controller/resume");
+
+module.exports = function (app) {
+
+    /************************************************************************/
+    /*                Resful: URI Represent a Resource!!!                   */
+    /************************************************************************/
+
+    //page
+    
+
+    //api 
+    app.post("/resume/query", resumeCtrller.query);
+    
+    //can't mapping router
+    app.get("*", others.fourofour);
+};
