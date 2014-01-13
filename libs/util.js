@@ -22,3 +22,41 @@
   Desc: the util definitions
  */
 
+var debug4Ctrller   = require("debug")("controller");
+var debug4Proxy     = require("debug")("proxy");
+var debug4Lib       = require("debug")("lib");
+var debug4Test      = require("debug")("test");
+var debug4Other     = require("debug")("other");
+var debug4Service   = require("debug")("service");
+
+global.debugCtrller = debug4Ctrller;
+global.debugProxy   = debug4Proxy;
+global.debugLib     = debug4Lib;
+global.debugTest    = debug4Test;
+global.debugOther   = debug4Other;
+global.debugService = debug4Service;
+
+/**
+ * generate guid
+ */
+exports.GUID = function () {
+    var guid = "";
+    for (var i = 1; i <= 32; i++){
+      var n = Math.floor(Math.random()*16.0).toString(16);
+      guid +=   n;
+      if((i==8)||(i==12)||(i==16)||(i==20))
+        guid += "-";
+    }
+    return guid; 
+};
+
+/**
+ * format String with pattern
+ * @return {String} the formatted str
+ */
+String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/\{(\d+)\}/g, function (m, i) {
+        return args[i];
+    });
+};
