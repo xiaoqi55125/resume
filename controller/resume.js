@@ -22,8 +22,11 @@
   Desc: the controller of resume
  */
 
-var resume = require("../proxy").Resume;
-
+var Resume   = require("../proxy").Resume;
+var check    = require("validator").check;
+var sanitize = require("validator").sanitize;
+var resUtil  = require("../lib/resUtil");
+var config   = require("../config").config;
 
 /**
  * query resume with conditions
@@ -34,4 +37,26 @@ var resume = require("../proxy").Resume;
  */
 exports.query = function (req, res, next) {
     debugCtrller("/controller/resume/query");
+
+    var conditions = {};
+    try {
+        if (req.body.name) {
+            var name = sanitize(sanitize(req.body.name).trim()).xss();
+            conditions.name = name;
+        }
+    } catch (e) {
+        return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+    
+
+    // if (req.body.) {};
+    
+    Resume.getResumeWithConditions(conditions, function (err, result) {
+        if (err) {
+            return res.send(resUtil.generateRes(null, err.statusCode));
+        }
+
+        debugCtrller(result);
+        return res.send(resUtil.generateRes(result, config.statusCode.STATUS_OK));
+    });
 };

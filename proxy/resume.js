@@ -23,7 +23,7 @@
  */
 
 var models = require("../model");
-var User   = models.User;
+var Resume   = models.Resume;
 
 /**
  * get resume with query conditions
@@ -33,6 +33,7 @@ var User   = models.User;
  */
 exports.getResumeWithConditions = function (conditions, callback) {
     debugProxy("/proxy/resume/getResumeWithConditions");
+    Resume.find(conditions).exec(callback);
 };
 
 
