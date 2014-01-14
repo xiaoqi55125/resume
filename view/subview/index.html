@@ -1,13 +1,36 @@
+<head>
+    <!-- script -->
+    <%- Loader("/public/javascript/index.min.js")
+    .js("/public/javascript/bootstrap-select.js")
+    .js("/public/javascript/bootstrap-datepicker.js")
+    .js("/public/javascript/bootbox.min.js")
+    .js("/public/javascript/index.js")
+    .done(assets)
+    %>
+    <!-- style -->
+    <%- Loader("/public/stylesheets/index.min.css")
+    .css("/public/stylesheets/index.css")
+    .css("/public/stylesheets/bootstrap-select.css")
+    .css("/public/stylesheets/datepicker.css")
+    .done(assets)
+    %>
+</head>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+    });
+</script>
 <div class="main_div">
 	<h3>简历搜索</h3>
 	<hr>
-	<form>
+	<form class="resumeSearchForm">
 		<div class="row">
-			<div class="col-md-2">姓名:<input class="form-control"></div>
+			<div class="col-md-2">姓名:<input class="form-control" name="name"></div>
 			<div class="col-md-2">毕业院校:<input class="form-control"></div>
 			<div class="col-md-3">工作单位:<input class="form-control"></div>
 			<div class="col-md-2">
-				<button type="button" class="btn btn-success" style="margin-top:18px">
+				<button type="button" class="btn btn-success" style="margin-top:18px" onclick="resumeSearch()">
 					<span class="glyphicon glyphicon-search"></span>搜索
 				</button>
 			</div>
