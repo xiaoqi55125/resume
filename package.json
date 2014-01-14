@@ -22,6 +22,7 @@
     "homepage": "https://github.com/xiaoqi55125/resume",
     "dependencies": {
       "express": "*",
+      "express-partials": "*",
       "mongoose": "*",
       "ejs": "0.8.4",
       "captchagen": "1.1.0",

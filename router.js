@@ -32,7 +32,7 @@ module.exports = function (app) {
     /************************************************************************/
 
     //page
-    
+    app.get("/",resumeRender.index);
 
     //api 
     app.post("/resume/query", resumeCtrller.query);

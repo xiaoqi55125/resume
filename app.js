@@ -49,11 +49,12 @@ var app          = express();
 app.configure(function () {
     app.set('view engine', 'html');
     app.set('views', path.join(__dirname, 'view'));
-    app.set("view options", {layout : false});
+    // app.set("view options", {layout : false});
     app.engine('html', require('ejs').renderFile);
 
 
     //middleware
+    app.use(require('express-partials')());
     app.use(express.compress());
     app.use(express.favicon());
 

@@ -34,3 +34,7 @@ exports.fourofour=function (req, res, next){
     res.render('error/404');
 };
 
+exports.index = function(req, res, next) {
+    debugCtrller("/controller/render/index");
+    res.render('subview/index');
+}
