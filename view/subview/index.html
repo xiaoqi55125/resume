@@ -1,25 +1,25 @@
 <head>
-    <!-- script -->
-    <%- Loader("/public/javascript/index.min.js")
-    .js("/public/javascript/bootstrap-select.js")
-    .js("/public/javascript/bootstrap-datepicker.js")
-    .js("/public/javascript/bootbox.min.js")
-    .js("/public/javascript/index.js")
-    .done(assets)
-    %>
-    <!-- style -->
-    <%- Loader("/public/stylesheets/index.min.css")
-    .css("/public/stylesheets/index.css")
-    .css("/public/stylesheets/bootstrap-select.css")
-    .css("/public/stylesheets/datepicker.css")
-    .done(assets)
-    %>
+	<!-- script -->
+	<%- Loader("/public/javascript/index.min.js")
+	.js("/public/javascript/bootstrap-select.js")
+	.js("/public/javascript/bootstrap-datepicker.js")
+	.js("/public/javascript/bootbox.min.js")
+	.js("/public/javascript/index.js")
+	.done(assets)
+	%>
+	<!-- style -->
+	<%- Loader("/public/stylesheets/index.min.css")
+	.css("/public/stylesheets/index.css")
+	.css("/public/stylesheets/bootstrap-select.css")
+	.css("/public/stylesheets/datepicker.css")
+	.done(assets)
+	%>
 </head>
 
 <script type="text/javascript">
-    $(document).ready(function(){
+	$(document).ready(function(){
 
-    });
+	});
 </script>
 <div class="main_div">
 	<h3>简历搜索</h3>
@@ -30,8 +30,8 @@
 			<div class="col-md-2">毕业院校:<input class="form-control"></div>
 			<div class="col-md-3">工作单位:<input class="form-control"></div>
 			<div class="col-md-2">
-				<button type="button" class="btn btn-success" style="margin-top:18px" onclick="resumeSearch()">
-					<span class="glyphicon glyphicon-search"></span>搜索
+				<button type="button" class="btn btn-primary" style="margin-top:18px" onclick="resumeSearch()">
+					<span class="glyphicon glyphicon-search"></span> 搜索
 				</button>
 			</div>
 		</div>
@@ -50,13 +50,69 @@
 			</div>
 			<div class="col-md-10">
 				<div class="panel panel-primary">
-		        <div class="panel-heading">
-		          <h3 class="panel-title">简历详情</h3>
-		        </div>
-		        <div class="panel-body">
-		          Panel content
-		        </div>
-		      </div>
+					<div class="panel-heading">
+						<h3 class="panel-title">简历详情</h3>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-4">姓名：<label id='uName'>中文</label></div>
+							<div class="col-md-4">性别：<label id='sex'>男</label></div>
+							<div class="col-md-1"></div>
+							<div class="col-md-3">
+								<button type="button" class="btn btn-primary">
+									<span class="glyphicon glyphicon-send"></span> 发送该简历
+								</button>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">手机号：<label id='mobile'>18762400000</label></div>
+							<div class="col-md-3">出生年月：<label id='birth'>1989年7月</label></div>
+							<div class="col-md-3">简历来源：<label id='rFrom'>智联</label></div>
+							<div class="col-md-2"></div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-md-4">毕业院校：<label id='mobile'>**大学</label></div>
+							<div class="col-md-3">学历：<label id='mobile'>**大学</label></div>
+							<div class="col-md-3"></div>
+							<div class="col-md-2"></div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">毕业时间：<label id='birth'>1999年7月</label></div>
+							<div class="col-md-3">专业：<label id='birth'>计算机</label></div>
+							<div class="col-md-3"></div>
+							<div class="col-md-2"></div>
+						</div>
+						<hr>
+						<table class="table">
+							<thead>
+								<tr>
+								<th>编号</th>
+								<th>公司</th>
+								<th>职位</th>
+								<th>任职时间</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										1
+									</td>
+									<td>
+										TB - Monthly
+									</td>
+									<td>
+										01/04/2012
+									</td>
+									<td>
+										Default
+									</td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		</div>
 	</form>
