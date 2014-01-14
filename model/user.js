@@ -37,7 +37,7 @@ var UserSChema = new Schema({
         speciality  : String,
         degree      : String
     },
-    expriences: [{
+    experiences: [{
         company     : String,
         position    : String,
         time        : String
@@ -45,3 +45,4 @@ var UserSChema = new Schema({
 });
 
 mongoose.model("users", UserSChema);
+
