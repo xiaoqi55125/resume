@@ -25,7 +25,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-var ResumeSChema = new Schema({
+var UserSChema = new Schema({
     userName  : String,
     source    : String,
     sex       : String,
@@ -44,4 +44,4 @@ var ResumeSChema = new Schema({
     }]
 });
 
-mongoose.model("Resume", ResumeSChema);
+mongoose.model("users", UserSChema);

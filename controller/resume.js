@@ -40,16 +40,16 @@ exports.query = function (req, res, next) {
 
     var conditions = {};
     try {
-        if (req.body.name) {
-            var name = sanitize(sanitize(req.body.name).trim()).xss();
-            conditions.name = name;
+        if (req.body.userName) {
+            var userName = sanitize(sanitize(req.body.userName).trim()).xss();
+            conditions.userName = userName;
         }
     } catch (e) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
     
 
-    // if (req.body.) {};
+    //if (req.body.) {};
     
     Resume.getResumeWithConditions(conditions, function (err, result) {
         if (err) {

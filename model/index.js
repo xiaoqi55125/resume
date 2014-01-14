@@ -32,6 +32,6 @@ mongoose.connect(config.db, function (err) {
     }
 });
 
-require("./resume");
+require("./user");
 
-exports.Resume = mongoose.model("Resume");
+exports.users = mongoose.model("users");

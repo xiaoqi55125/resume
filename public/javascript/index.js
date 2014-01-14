@@ -26,13 +26,20 @@
  */
 function resumeSearch () {
   //without check
-  bootbox.alert('123456');
   $.ajax({
     url:'/resume/query',
     type:'POST',
     data:$('form.resumeSearchForm').serialize(),
     success:function (data) {
-      bootbox.alert(data+'success');
+      if (data.statusCode === 0) {
+        //alert(data.data[0].userName);
+        $("#uName").html(data.data[0].userName);
+        //changeMainTextValue(data.data[0]);
+      }
     }
   })
+}
+
+function changeMainTextValue (data) {
+  $("#uName").value(data.userName);
 }
