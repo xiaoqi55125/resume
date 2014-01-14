@@ -1,1 +1,28 @@
-upload.html
+<head>
+    <!-- script -->
+    <%- Loader("/public/javascript/upload.min.js")
+    .js("/public/javascript/bootstrap-select.js")
+    .js("/public/javascript/bootstrap-datepicker.js")
+    .js("/public/javascript/bootbox.min.js")
+    .js("/public/javascript/upload.js")
+    .done(assets)
+    %>
+    <!-- style -->
+    <%- Loader("/public/stylesheets/upload.min.css")
+    .css("/public/stylesheets/upload.css")
+    .css("/public/stylesheets/bootstrap-select.css")
+    .css("/public/stylesheets/datepicker.css")
+    .done(assets)
+    %>
+</head>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+    });
+</script>
+<div class="main_div">
+	<h3>简历上传</h3>
+	<hr>
+	
+</div>

@@ -20,7 +20,7 @@
   Date: Jan 13, 2014
   Time: 3:55 PM
   Desc: the controller for render page
- */
+  */
 
 /**
  * 404 error controller
@@ -29,12 +29,17 @@
  * @param  {Function} next the next handler
  * @return {null}        
  */
-exports.fourofour=function (req, res, next){
-    debugCtrller("/controller/render/fourofour");
-    res.render('error/404');
+ exports.fourofour=function (req, res, next){
+  debugCtrller("/controller/render/fourofour");
+  res.render('error/404');
 };
 
-exports.index = function(req, res, next) {
-    debugCtrller("/controller/render/index");
-    res.render('subview/index');
+exports.index = function (req, res, next) {
+  debugCtrller("/controller/render/index");
+  res.render('subview/index');
+}
+
+exports.upload = function (req, res, next) {
+  debugCtrller("/controller/render/upload");
+  res.render('subview/upload');
 }
