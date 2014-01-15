@@ -32,14 +32,62 @@ function resumeSearch () {
     data:$('form.resumeSearchForm').serialize(),
     success:function (data) {
       if (data.statusCode === 0) {
-        //alert(data.data[0].userName);
-        $("#uName").html(data.data[0].userName);
-        //changeMainTextValue(data.data[0]);
+        changeListView(data.data);
+        changeMainTextValue(data.data[0]);
       }
     }
   })
 }
 
+function changeListView (data) {
+  $("#listView").html("");
+  for (var i = 0; i < data.length; i++) {
+    var link = $("<a href='javascript:void(0);' class='list-group-item'>"+data[i].userName+"</a>");
+    link.click(tdCont.listClick(data[i]._id,data[i]));
+    $("#listView").append(link);
+  };
+}
+
 function changeMainTextValue (data) {
-  $("#uName").value(data.userName);
+  $("#uName").html(data.userName);
+  $("#sex").html(data.sex);
+  $("#mobile").html(data.mobile);
+  $("#birth").html(data.birthday);
+  $("#rFrom").html(data.source);
+  //college
+  $("#college").html(data.education.college);
+  $("#degree").html(data.education.degree);
+  $("#graduatedTime").html(data.education.graduatedTime);
+  $("#speciality").html(data.education.speciality);
+
+  //experience
+  $("#experienceAttr").html("");
+  for (var i = 0; i < data.experiences.length; i++) {
+      var cellData = data.experiences[i];
+      var cnt = i+1;
+      var temp  = "<tr><td>"+
+                cnt+"</td><td>"+
+                cellData.position+"</td><td>"+
+                cellData.company+"</td><td>"+
+                cellData.time+"</td></tr>";
+      $("#experienceAttr").append(temp);
+  }; 
+}
+
+function listClickFunc (id,data) {
+  changeMainTextValue(data);
+}
+var tdCont = {
+  cell: function(item) {
+    return $("<td></td>").html(item);
+  },
+
+  row: function() {
+    return $("<tr></tr>");
+  },
+  listClick: function(id,data) {
+    return function() {
+      listClickFunc(id,data);
+    }
+  }
 }
