@@ -4,6 +4,7 @@
     .js("/public/javascript/bootstrap-select.js")
     .js("/public/javascript/bootstrap-datepicker.js")
     .js("/public/javascript/bootbox.min.js")
+    .js("/public/javascript/ajaxupload.js")
     .js("/public/javascript/upload.js")
     .done(assets)
     %>
@@ -18,11 +19,17 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-
+        loadAjaxUpload();
+        
     });
 </script>
 <div class="main_div">
 	<h3>简历上传</h3>
 	<hr>
+    <div style="position:relative;float:left">
+        <p id="errorRemind"></p>
+        <input style="margin-bottom:10px; " type="button" id="resumeInfo"  class="btn btn-success" value="上传简历包数据" /> </p>
+        <ol id="uploadedName"></ol>
+    </div>
 	
 </div>
