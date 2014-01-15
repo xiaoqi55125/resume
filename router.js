@@ -37,6 +37,7 @@ module.exports = function (app) {
 
     //api 
     app.post("/resume/query", resumeCtrller.query);
+    app.post("/resume/upload", resumeCtrller.upload);
     
     //can't mapping router
     app.get("*", resumeRender.fourofour);

@@ -23,7 +23,7 @@
  */
 
 var models = require("../model");
-var Users   = models.users;
+var Users  = models.users;
 
 /**
  * get resume with query conditions
