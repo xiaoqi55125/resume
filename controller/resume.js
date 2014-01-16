@@ -30,7 +30,7 @@ var config   = require("../config").config;
 var path     = require("path");
 var async    = require("async");
 var fs       = require("fs");
-var exec     = require("child_process").exec;
+var execSync = require("execSync");
 
 /**
  * query resume with conditions
@@ -96,32 +96,10 @@ exports.upload = function (req, res, next) {
     var shellStdout;
 
     var mainAnalysisScript = path.resolve(__dirname, "../", config.analysis_mainscript_path);
-    async.series({
-        runShell          : function (callback) {
-            exec("python {0}".format(mainAnalysisScript), function (err, stdout, stderr) {
-                debugCtrller("execed");
-                if (err || stderr) {
-                    debugCtrller((err || stderr));
-                    return callback(new ServerError(), null);
-                }
+    var result = existsSync.exec("python {0}".format(mainAnalysisScript));
 
-                debugCtrller(stdout);
-                debugCtrller(fs.existsSync(stdout));
-
-                return callback(null, stdout);
-            });
-        }
-    },
-    function (err, results) {
-        debugCtrller("enter callback");
-        debugCtrller("results : %s", results);
-        if (err || !results) {
-            return res.send(resUtil.generateRes(null, err.statusCode));
-        }
-
-        return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
-    }
-    );
+    debugCtrller(fs.existsSync(result.stdout));
+    return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
 
     // async.series({
     //     renameUploadFile  : function (callback) {
