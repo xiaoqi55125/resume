@@ -150,6 +150,13 @@ exports.upload = function (req, res, next) {
         readLog           : function (callback) {
             debugCtrller("readLog");
 
+            while(!fs.existsSync(shellStdout)){
+                debugCtrller("wait");
+            }
+
+            debugCtrller("exists");
+
+
             if (shellStdout && fs.existsSync(shellStdout)) {
                 var pathObj = handlerStdoutFilePath(shellStdout);
                 var content = "";
