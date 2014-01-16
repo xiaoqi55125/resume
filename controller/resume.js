@@ -88,7 +88,7 @@ exports.upload = function (req, res, next) {
     }
 
     var uploadFilePath = path.resolve(__dirname, "../upload/", fileName);
-    var transferFilePath = path.resolve(__dirname, "../bin/", fileName);
+    var transferFilePath = path.resolve(__dirname, "../", config.uncompress_file_path, fileName);
 
     debugCtrller(transferFilePath);
 
