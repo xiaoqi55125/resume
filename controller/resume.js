@@ -149,9 +149,16 @@ exports.upload = function (req, res, next) {
         }
 
         if (results.runShell) {
-            var filePath = results.runShell;
-            debugCtrller(filePath);
-            var content = fs.readFileSync(filePath);
+            var filePathStr = results.runShell;
+            debugCtrller(filePathStr);
+            var pathObj = handlerStdoutFilePath(filePathStr);
+            var content = "";
+            if (pathObj && pathObj.err) {
+                content = fs.readFileSync(pathObj.err);
+            } else if (pathObj && pathObj.dup) {
+                content = fs.readFileSync(pathObj.dup);
+            }
+            
             return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
         }
 
@@ -159,3 +166,29 @@ exports.upload = function (req, res, next) {
     });
     
 };
+
+/**
+ * handle resume analysis script's std out file path
+ * @param  {String} var stdout        the shell's stdout
+ * @return {Object}     the process object
+ */
+function handlerStdoutFilePath (var stdout) {
+    if (!stdout) {
+        return null;
+    }
+
+    var fileArr = stdout.split(" ");
+    var result = {};
+
+    for (var i = 0; i < fileArr.length; i++) {
+        if (fileArr[i].indexOf("err") != -1 ) {
+            result.err = fileArr[i];
+        }
+
+        if (fileArr[i].indexOf("dup") != -1) {
+            result.dup = fileArr[i];
+        }
+    }
+
+    return result;
+}
