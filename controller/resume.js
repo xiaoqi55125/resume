@@ -131,8 +131,10 @@ exports.upload = function (req, res, next) {
             debugCtrller("step runShell");
             var mainAnalysisScript = path.resolve(__dirname, "../", config.analysis_mainscript_path);
             exec("python {0}".format(mainAnalysisScript), function (err, stdout, stderr) {
+                debugCtrller("execed");
                 if (err || stderr) {
                     debugCtrller(err);
+                    debugCtrller(stderr)
                     return callback(new ServerError(), null);
                 }
 
