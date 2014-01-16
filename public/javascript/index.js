@@ -42,6 +42,7 @@ function resumeSearch () {
 function changeListView (data) {
   $("#listView").html("");
   for (var i = 0; i < data.length; i++) {
+    $("#resumeList").fadeIn(600);
     var link = $("<a href='javascript:void(0);' class='list-group-item'>"+data[i].userName+"</a>");
     link.click(tdCont.listClick(data[i]._id,data[i]));
     $("#listView").append(link);
@@ -75,6 +76,8 @@ function changeMainTextValue (data) {
 }
 
 function listClickFunc (id,data) {
+  $("#resumeDetail").hide();
+  $("#resumeDetail").fadeIn(600);
   changeMainTextValue(data);
 }
 var tdCont = {
