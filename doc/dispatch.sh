@@ -23,10 +23,10 @@ npm install
 make build
 
 #give the uploads dir the write premission
-sudo chmod o+w uploads
+# sudo chmod o+w uploads
 
 #give the backup dir the other user write premission
-sudo chmod o+w backup
+# sudo chmod o+w backup
 
 pm2 kill
 #make sure you have setted 'NODE_ENV'
