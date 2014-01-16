@@ -82,9 +82,9 @@ exports.upload = function (req, res, next) {
         check(fileName).notEmpty();
         check(tmp_path).notEmpty();
         fileName = sanitize(sanitize(fileName).trim()).xss();
-        if (path.extname(fileName).indexOf("zip") === -1) {
-            throw new InvalidParamError();
-        }
+        // if (path.extname(fileName).indexOf("zip") === -1) {
+        //     throw new InvalidParamError();
+        // }
     } catch (e) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
@@ -104,22 +104,29 @@ exports.upload = function (req, res, next) {
             });
         },
         pipeHtmlFile      : function (callback) {
-            var htmlStream = fs.createReadStream(uploadFilePath);
-            var newHtmlStream = fs.createWriteStream(transferFilePath);
-            htmlStream.pipe(newHtmlStream);
-        },
-        // uncompress        : function (callback) {
-        //     exec("unzip {0}".format(config.uncompress_file_path), function (err, stdout, stderr) {
-        //          if (err || stderr) {
-        //               debugCtrller(err || stderr || "");
-        //               return callback(new ServerError(), null);
-        //          }
+            var ext = path.extname(fileName);
+            if (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1) {
+                var htmlStream = fs.createReadStream(uploadFilePath);
+                var newHtmlStream = fs.createWriteStream(transferFilePath);
+                htmlStream.pipe(newHtmlStream);
+            } else if (ext.indexOf("zip") != -1) {
+                var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path);
+                exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath), 
+                    function (err, stdout, stderr) {
+                        if (err || stderr) {
+                            debugCtrller(err || stderr || "");
+                            return callback(new ServerError(), null);
+                        }
 
-        //          callback(null, null);
-        //     });
-        // },
+                        callback(null, null);
+                    }
+                );
+            }
+            
+        },
         runShell          : function (callback) {
             //todo
+            callback(null, null);
         }
     },
     function (err, results) {
