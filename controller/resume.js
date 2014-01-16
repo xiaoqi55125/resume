@@ -135,17 +135,19 @@ exports.upload = function (req, res, next) {
             exec("python {0}".format(mainAnalysisScript), function (err, stdout, stderr) {
                 debugCtrller("execed");
                 if (err || stderr) {
-                    debugCtrller(err);
-                    debugCtrller(stderr)
+                    debugCtrller((err || stderr));
                     return callback(new ServerError(), null);
                 }
 
-                callback(null, null);
+                debugCtrller(stdout);
+
+                callback(null, stdout);
             });
         }
     },
     function (err, results) {
         debugCtrller("enter callback");
+        debugCtrller("results : %s", results);
         if (err) {
             return res.send(resUtil.generateRes(null, err.statusCode));
         }
