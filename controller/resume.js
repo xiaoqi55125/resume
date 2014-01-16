@@ -98,6 +98,7 @@ exports.upload = function (req, res, next) {
     var mainAnalysisScript = path.resolve(__dirname, "../", config.analysis_mainscript_path);
     var result = execSync.exec("python {0}".format(mainAnalysisScript));
 
+    debugCtrller(results.stdout);
     debugCtrller(fs.existsSync(result.stdout));
     return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
 
