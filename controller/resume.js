@@ -92,6 +92,7 @@ exports.upload = function (req, res, next) {
 
     async.series({
         renameUploadFile  : function (callback) {
+            debugCtrller("step renameUploadFile");
             fs.rename(tmp_path, uploadFilePath, function (err) {
                 if (err) {
                     debugCtrller(err);
@@ -102,6 +103,7 @@ exports.upload = function (req, res, next) {
             });
         },
         pipeHtmlFile      : function (callback) {
+            debugCtrller("step pipeHtmlFile");
             var ext = path.extname(fileName);
             if (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1) {
                 var htmlStream = fs.createReadStream(uploadFilePath);
@@ -119,10 +121,13 @@ exports.upload = function (req, res, next) {
                         callback(null, null);
                     }
                 );
+            } else {
+                return callback(new InvalidParamError(), null);
             }
             
         },
         runShell          : function (callback) {
+            debugCtrller("step runShell");
             var mainAnalysisScript = path.resolve(__dirname, "../", config.analysis_mainscript_path);
             exec("python {0}".format(mainAnalysisScript), function (err, stdout, stderr) {
                 if (err || stderr) {
