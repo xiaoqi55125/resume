@@ -52,8 +52,6 @@ exports.query = function (req, res, next) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
     
-
-    //if (req.body.) {};
     
     Resume.getResumeWithConditions(conditions, function (err, result) {
         if (err) {
@@ -125,8 +123,15 @@ exports.upload = function (req, res, next) {
             
         },
         runShell          : function (callback) {
-            //todo
-            callback(null, null);
+            var mainAnalysisScript = path.resolve(__dirname, "../", config.analysis_mainscript_path);
+            exec("python {0}".format(mainAnalysisScript), function (err, stdout, stderr) {
+                if (err || stderr) {
+                    debugCtrller(err);
+                    return callback(new ServerError(), null);
+                }
+
+                callback(null, null);
+            });
         }
     },
     function (err, results) {
@@ -136,6 +141,5 @@ exports.upload = function (req, res, next) {
 
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
     });
-
     
 };
