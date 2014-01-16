@@ -14,7 +14,7 @@ function loadAjaxUpload() {
         responseType: "JSON",
         onSubmit: function(file, ext) {
 
-            if (ext && /^(html|§ip)$/.test(ext)) {
+            if (ext && /^(html|zip)$/.test(ext)) {
                 oBtn.value = "正在上传…";
                 //oBtn.disabled = "disabled";
 
