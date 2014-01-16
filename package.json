@@ -30,7 +30,8 @@
       "debug": "0.7.4",
       "async": "*",
       "loader": "*",
-      "validator": "1.5.1"
+      "validator": "1.5.1",
+      "execSync": "*"
     },
     "devDependencies": {
       "should": "*",
