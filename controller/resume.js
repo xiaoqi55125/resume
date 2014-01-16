@@ -149,18 +149,21 @@ exports.upload = function (req, res, next) {
         },
         readLog           : function (callback) {
             debugCtrller("readLog");
-            if (shellStdout) {
-                var pathObj = handlerStdoutFilePath(shellStdout);
-                var content = "";
+            // if (shellStdout) {
+            //     var pathObj = handlerStdoutFilePath(shellStdout);
+            //     var content = "";
 
-                if (pathObj && pathObj.err) {
-                    content = fs.readFileSync(pathObj.err);
-                } else if (pathObj && pathObj.dup) {
-                    content = fs.readFileSync(pathObj.dup);
-                }
+            //     if (pathObj && pathObj.err) {
+            //         content = fs.readFileSync(pathObj.err);
+            //     } else if (pathObj && pathObj.dup) {
+            //         content = fs.readFileSync(pathObj.dup);
+            //     }
                 
-                return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
-            }
+            //     return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
+            // }
+            // 
+            var content = fs.readFileSync("/root/resume/bin/resumeanalysis/log/failed/20140116161322.err.log");
+            return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
         }
     },
     function (err, results) {
