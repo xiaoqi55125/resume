@@ -83,7 +83,7 @@ exports.config = {
         //....
     },
 
-    uncompress_file_path    : "./bin/XXXX" 
+    uncompress_file_path    : "./bin" 
 
 };
 
