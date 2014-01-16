@@ -90,8 +90,6 @@ exports.upload = function (req, res, next) {
     var uploadFilePath = path.resolve(__dirname, "../upload/", fileName);
     var transferFilePath = path.resolve(__dirname, "../", config.uncompress_file_path, fileName);
 
-    debugCtrller(transferFilePath);
-
     async.series({
         renameUploadFile  : function (callback) {
             debugCtrller("step renameUploadFile");
@@ -139,17 +137,22 @@ exports.upload = function (req, res, next) {
                     return callback(new ServerError(), null);
                 }
 
-                debugCtrller(stdout);
-
-                callback(null, stdout);
+                return callback(null, stdout);
             });
         }
     },
     function (err, results) {
         debugCtrller("enter callback");
         debugCtrller("results : %s", results);
-        if (err) {
+        if (err || !results) {
             return res.send(resUtil.generateRes(null, err.statusCode));
+        }
+
+        if (results.runShell) {
+            var filePath = results.runShell;
+            debugCtrller(filePath);
+            var content = fs.readFileSync(filePath);
+            return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
         }
 
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
