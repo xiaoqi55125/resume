@@ -90,6 +90,8 @@ exports.upload = function (req, res, next) {
     }
 
     var uploadFilePath = path.resolve(__dirname, "../upload/", fileName);
+    var transferFilePath = path.resolve(__dirname, "../bin/", fileName);
+
     async.series({
         renameUploadFile  : function (callback) {
             fs.rename(tmp_path, uploadFilePath, function (err) {
@@ -99,20 +101,34 @@ exports.upload = function (req, res, next) {
                 }
 
                 callback(null, null);
-            })
-        },
-        uncompress        : function (callback) {
-            exec("unzip {0}".format(config.uncompress_file_path), function (err, stdout, stderr) {
-                 if (err || stderr) {
-                      debugCtrller(err || stderr || "");
-                      return callback(new ServerError(), null);
-                 }
-
-                 callback(null, null);
             });
         },
+        pipeHtmlFile      : function (callback) {
+            var htmlStream = fs.createReadStream(uploadFilePath);
+            var newHtmlStream = fs.createWriteStream(transferFilePath);
+            htmlStream.pipe(newHtmlStream);
+        },
+        // uncompress        : function (callback) {
+        //     exec("unzip {0}".format(config.uncompress_file_path), function (err, stdout, stderr) {
+        //          if (err || stderr) {
+        //               debugCtrller(err || stderr || "");
+        //               return callback(new ServerError(), null);
+        //          }
+
+        //          callback(null, null);
+        //     });
+        // },
         runShell          : function (callback) {
             //todo
         }
-    })
+    },
+    function (err, results) {
+        if (err) {
+            return res.send(resUtil.generateRes(null, err.statusCode));
+        }
+
+        return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
+    });
+
+    
 };
