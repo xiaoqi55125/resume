@@ -90,6 +90,8 @@ exports.upload = function (req, res, next) {
     var uploadFilePath = path.resolve(__dirname, "../upload/", fileName);
     var transferFilePath = path.resolve(__dirname, "../bin/", fileName);
 
+    debugCtrller(transferFilePath);
+
     async.series({
         renameUploadFile  : function (callback) {
             debugCtrller("step renameUploadFile");
