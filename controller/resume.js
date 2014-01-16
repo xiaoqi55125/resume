@@ -90,8 +90,8 @@ exports.upload = function (req, res, next) {
     var uploadFilePath = path.resolve(__dirname, "../upload/", fileName);
     var transferFilePath = path.resolve(__dirname, "../", config.uncompress_file_path, fileName);
 
-    fs.readFileSync("/root/resume/bin/resumeanalysis/log/failed/20140116161322.err.log");
-    return res.send(resUtil.generateRes("", config.statusCode.STATUS_OK));
+    var content = fs.readFileSync("/root/resume/bin/resumeanalysis/log/failed/20140116161322.err.log");
+    return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
 
     // async.series({
     //     renameUploadFile  : function (callback) {
