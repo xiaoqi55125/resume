@@ -109,6 +109,7 @@ exports.upload = function (req, res, next) {
                 var htmlStream = fs.createReadStream(uploadFilePath);
                 var newHtmlStream = fs.createWriteStream(transferFilePath);
                 htmlStream.pipe(newHtmlStream);
+                return callback(null, null);
             } else if (ext.indexOf("zip") != -1) {
                 var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path);
                 exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath), 
@@ -140,6 +141,7 @@ exports.upload = function (req, res, next) {
         }
     },
     function (err, results) {
+        debugCtrller("enter callback");
         if (err) {
             return res.send(resUtil.generateRes(null, err.statusCode));
         }
