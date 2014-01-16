@@ -169,10 +169,10 @@ exports.upload = function (req, res, next) {
 
 /**
  * handle resume analysis script's std out file path
- * @param  {String} var stdout        the shell's stdout
+ * @param  {String} stdout        the shell's stdout
  * @return {Object}     the process object
  */
-function handlerStdoutFilePath (var stdout) {
+function handlerStdoutFilePath (stdout) {
     if (!stdout) {
         return null;
     }
