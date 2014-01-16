@@ -130,7 +130,7 @@ exports.upload = function (req, res, next) {
         runShell          : function (callback) {
             debugCtrller("step runShell");
             var mainAnalysisScript = path.resolve(__dirname, "../", config.analysis_mainscript_path);
-            exec("python {0}".format(mainAnalysisScript), function (err, stdout, stderr) {
+            exec("sudo python {0}".format(mainAnalysisScript), function (err, stdout, stderr) {
                 debugCtrller("execed");
                 if (err || stderr) {
                     debugCtrller((err || stderr));
@@ -153,9 +153,12 @@ exports.upload = function (req, res, next) {
             debugCtrller(filePathStr);
             var pathObj = handlerStdoutFilePath(filePathStr);
             var content = "";
+
             if (pathObj && pathObj.err) {
+                debugCtrller(path.existsSync(pathObj.err));
                 content = fs.readFileSync(pathObj.err);
             } else if (pathObj && pathObj.dup) {
+                debugCtrller(path.existsSync(pathObj.dup));
                 content = fs.readFileSync(pathObj.dup);
             }
             
