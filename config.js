@@ -83,7 +83,7 @@ exports.config = {
         //....
     },
 
-    uncompress_file_path    : "./bin",
+    uncompress_file_path    : "./bin/resumeanalysis/files",
 
     analysis_mainscript_path: "./bin/resumeanalysis/app.py"
 
