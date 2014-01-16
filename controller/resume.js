@@ -149,6 +149,17 @@ exports.upload = function (req, res, next) {
         },
         readLog           : function (callback) {
             debugCtrller("readLog");
+            debugCtrller(shellStdout);
+            exec("ls -al /root/resume/bin/resumeanalysis/log/failed/", function (err, stdout, stderr) {
+                if (err || stderr) {
+                    debugCtrller((err || stderr));
+                    return callback(new ServerError(), null);
+                }
+
+                debugCtrller(stdout);
+
+
+            });
             // if (shellStdout) {
             //     var pathObj = handlerStdoutFilePath(shellStdout);
             //     var content = "";
