@@ -149,29 +149,32 @@ exports.upload = function (req, res, next) {
         },
         readLog           : function (callback) {
             debugCtrller("readLog");
-
-            while(!fs.existsSync(shellStdout)){
-                debugCtrller("wait");
-            }
-
-            debugCtrller("exists");
-
-
-            if (shellStdout && fs.existsSync(shellStdout)) {
-                var pathObj = handlerStdoutFilePath(shellStdout);
-                var content = "";
-
-                if (pathObj && pathObj.err) {
-                    content = fs.readFileSync(pathObj.err);
-                } else if (pathObj && pathObj.dup) {
-                    content = fs.readFileSync(pathObj.dup);
+            debugCtrller(shellStdout);
+            exec("cat " + shellStdout, function (err, stdout, stderr) {
+                if (err || stderr) {
+                    debugCtrller((err || stderr));
+                    return callback(new ServerError(), null);
                 }
+
+                debugCtrller(stdout);
+                return callback(null, null);
+            });
+
+            // if (shellStdout && fs.existsSync(shellStdout)) {
+            //     var pathObj = handlerStdoutFilePath(shellStdout);
+            //     var content = "";
+
+            //     if (pathObj && pathObj.err) {
+            //         content = fs.readFileSync(pathObj.err);
+            //     } else if (pathObj && pathObj.dup) {
+            //         content = fs.readFileSync(pathObj.dup);
+            //     }
                 
-                return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
-            } else {
-                debugCtrller("not exists");
-                return res.send(resUtil.generateRes("content", config.statusCode.STATUS_OK));
-            }
+            //     return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
+            // } else {
+            //     debugCtrller("not exists");
+            //     return res.send(resUtil.generateRes("content", config.statusCode.STATUS_OK));
+            // }
             
             // var content = fs.readFileSync("/root/resume/bin/resumeanalysis/log/failed/20140116161322.err.log");
             // return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
