@@ -84,7 +84,7 @@ exports.upload = function (req, res, next) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
 
-    var uploadFilePath = path.resolve(__dirname, "../upload/", fileName);
+    var uploadFilePath   = path.resolve(__dirname, "../upload/", fileName);
     var transferFilePath = path.resolve(__dirname, "../", config.uncompress_file_path, fileName);
 
     async.series({
@@ -109,16 +109,14 @@ exports.upload = function (req, res, next) {
                 return callback(null, null);
             } else if (ext.indexOf("zip") != -1) {
                 var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path);
-                exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath), 
-                    function (err, stdout, stderr) {
-                        if (err || stderr) {
-                            debugCtrller(err || stderr || "");
-                            return callback(new ServerError(), null);
-                        }
+                var result = execSync.exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath));
 
-                        callback(null, null);
-                    }
-                );
+                if (result.stderr) {
+                    return callback(new ServerError(), null);
+                } else {
+                    return callback(null, null);
+                }
+
             } else {
                 return callback(new InvalidParamError(), null);
             }
