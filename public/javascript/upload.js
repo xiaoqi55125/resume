@@ -27,6 +27,7 @@ function loadAjaxUpload() {
         onComplete: function(file, response) {
             if (!response.statusCode) {
             	$("#showDetail").html("");
+            	$("#logErrAndDup").hide();
                 oBtn.value = "上传成功,继续上传?";
                 oRemind.innerHTML = "";
                 var tempLog = "";
