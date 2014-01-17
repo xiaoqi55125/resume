@@ -140,7 +140,6 @@ exports.upload = function (req, res, next) {
     },
     function (err, results) {
         debugCtrller("enter callback");
-        debugCtrller("results : %s", results);
         if (err || !results) {
             return res.send(resUtil.generateRes(null, err.statusCode));
         }
@@ -149,7 +148,10 @@ exports.upload = function (req, res, next) {
             var filePathStr = results.runShell;
             debugCtrller(filePathStr);
             var pathObj = handlerStdoutFilePath(filePathStr);
-            var contentObj = {};
+            var contentObj = {
+                err     : "",
+                dup     : ""
+            };
 
             if (pathObj && pathObj.err && fs.existsSync(pathObj.err)) {
                 contentObj.err = fs.readFileSync(pathObj.err, { encoding : "utf8" });
