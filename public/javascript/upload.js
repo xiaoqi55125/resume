@@ -29,7 +29,7 @@ function loadAjaxUpload() {
             	$("#showDetail").html("");
                 oBtn.value = "上传成功,继续上传?";
                 oRemind.innerHTML = "";
-                var tempLog;
+                var tempLog = "";
                 if (response.data.err) {
                     $("#logErrAndDup").show();
                     tempLog += "<p>错误信息</p>"
