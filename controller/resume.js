@@ -104,7 +104,7 @@ exports.upload = function (req, res, next) {
             var ext = path.extname(fileName);
             if (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1) {
                 var content = fs.readFileSync(uploadFilePath, { encoding : "utf8" });
-                fs.writeFileSync(transferFilePath, content, { encoding : "utf8" });
+                fs.writeFileSync(transferFilePath, content, { encoding : "utf8", flag : "w+" });
                 return callback(null, null);
             } else if (ext.indexOf("zip") != -1) {
                 var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path);
