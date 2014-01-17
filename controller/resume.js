@@ -80,9 +80,6 @@ exports.upload = function (req, res, next) {
         check(fileName).notEmpty();
         check(tmp_path).notEmpty();
         fileName = sanitize(sanitize(fileName).trim()).xss();
-        // if (path.extname(fileName).indexOf("zip") === -1) {
-        //     throw new InvalidParamError();
-        // }
     } catch (e) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
@@ -90,128 +87,81 @@ exports.upload = function (req, res, next) {
     var uploadFilePath = path.resolve(__dirname, "../upload/", fileName);
     var transferFilePath = path.resolve(__dirname, "../", config.uncompress_file_path, fileName);
 
-    // var content = fs.readFileSync("/root/resume/bin/resumeanalysis/log/failed/20140116161322.err.log");
-    // return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
-    
-    var shellStdout;
+    async.series({
+        renameUploadFile  : function (callback) {
+            debugCtrller("step renameUploadFile");
+            fs.rename(tmp_path, uploadFilePath, function (err) {
+                if (err) {
+                    debugCtrller(err);
+                    return callback(new ServerError(), null);
+                }
 
-    var mainAnalysisScript = path.resolve(__dirname, "../", config.analysis_mainscript_path);
-    var result = execSync.exec("python {0}".format(mainAnalysisScript));
+                callback(null, null);
+            });
+        },
+        pipeHtmlFile      : function (callback) {
+            debugCtrller("step pipeHtmlFile");
+            var ext = path.extname(fileName);
+            if (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1) {
+                var htmlStream = fs.createReadStream(uploadFilePath);
+                var newHtmlStream = fs.createWriteStream(transferFilePath);
+                htmlStream.pipe(newHtmlStream);
+                return callback(null, null);
+            } else if (ext.indexOf("zip") != -1) {
+                var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path);
+                exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath), 
+                    function (err, stdout, stderr) {
+                        if (err || stderr) {
+                            debugCtrller(err || stderr || "");
+                            return callback(new ServerError(), null);
+                        }
 
-    var filePath = result.stdout.replace(/[\r\n]/g, "");
-    console.log(filePath);
-    debugCtrller(fs.existsSync(filePath));
-    return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
+                        callback(null, null);
+                    }
+                );
+            } else {
+                return callback(new InvalidParamError(), null);
+            }
+        },
+        runShell          : function (callback) {
+            debugCtrller("step runShell");
+            var mainAnalysisScript = path.resolve(__dirname, "../", config.analysis_mainscript_path);
+            var result = execSync.exec("python {0}".format(mainAnalysisScript));
 
-    // async.series({
-    //     renameUploadFile  : function (callback) {
-    //         debugCtrller("step renameUploadFile");
-    //         fs.rename(tmp_path, uploadFilePath, function (err) {
-    //             if (err) {
-    //                 debugCtrller(err);
-    //                 return callback(new ServerError(), null);
-    //             }
+            if (result.stderr) {
+                return callback(new ServerError(), null);
+            } else if (result.stdout) {
+                var filePath = result.stdout.replace(/[\r\n]/g, "");
+                return callback(null, filePath);
+            } else {
+                return callback(null, null);
+            }
+        }
+    },
+    function (err, results) {
+        debugCtrller("enter callback");
+        debugCtrller("results : %s", results);
+        if (err || !results) {
+            return res.send(resUtil.generateRes(null, err.statusCode));
+        }
 
-    //             callback(null, null);
-    //         });
-    //     },
-    //     pipeHtmlFile      : function (callback) {
-    //         debugCtrller("step pipeHtmlFile");
-    //         var ext = path.extname(fileName);
-    //         if (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1) {
-    //             var htmlStream = fs.createReadStream(uploadFilePath);
-    //             var newHtmlStream = fs.createWriteStream(transferFilePath);
-    //             htmlStream.pipe(newHtmlStream);
-    //             return callback(null, null);
-    //         } else if (ext.indexOf("zip") != -1) {
-    //             var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path);
-    //             exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath), 
-    //                 function (err, stdout, stderr) {
-    //                     if (err || stderr) {
-    //                         debugCtrller(err || stderr || "");
-    //                         return callback(new ServerError(), null);
-    //                     }
+        if (results.runShell) {
+            var filePathStr = results.runShell;
+            debugCtrller(filePathStr);
+            var pathObj = handlerStdoutFilePath(filePathStr);
+            var content = "";
 
-    //                     callback(null, null);
-    //                 }
-    //             );
-    //         } else {
-    //             return callback(new InvalidParamError(), null);
-    //         }
+            if (pathObj && pathObj.err && fs.existsSync(pathObj.err)) {
+                content = fs.readFileSync(pathObj.err);
+            } else if (pathObj && pathObj.dup && fs.existsSync(pathObj.dup)) {
+                content = fs.readFileSync(pathObj.dup);
+            }
             
-    //     },
-    //     runShell          : function (callback) {
-    //         debugCtrller("step runShell");
-    //         var mainAnalysisScript = path.resolve(__dirname, "../", config.analysis_mainscript_path);
-    //         exec("python {0}".format(mainAnalysisScript), function (err, stdout, stderr) {
-    //             debugCtrller("execed");
-    //             if (err || stderr) {
-    //                 debugCtrller((err || stderr));
-    //                 return callback(new ServerError(), null);
-    //             }
+            return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
+        }
 
-    //             shellStdout = stdout;
-
-    //             return callback(null, stdout);
-    //         });
-    //     },
-    //     readLog           : function (callback) {
-    //         debugCtrller("readLog");
-    //         debugCtrller(shellStdout);
-    //         exec("cat " + shellStdout, function (err, stdout, stderr) {
-    //             if (err || stderr) {
-    //                 debugCtrller((err || stderr));
-    //                 return callback(new ServerError(), null);
-    //             }
-
-    //             debugCtrller(stdout);
-    //             return callback(null, null);
-    //         });
-
-    //         // if (shellStdout && fs.existsSync(shellStdout)) {
-    //         //     var pathObj = handlerStdoutFilePath(shellStdout);
-    //         //     var content = "";
-
-    //         //     if (pathObj && pathObj.err) {
-    //         //         content = fs.readFileSync(pathObj.err);
-    //         //     } else if (pathObj && pathObj.dup) {
-    //         //         content = fs.readFileSync(pathObj.dup);
-    //         //     }
-                
-    //         //     return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
-    //         // } else {
-    //         //     debugCtrller("not exists");
-    //         //     return res.send(resUtil.generateRes("content", config.statusCode.STATUS_OK));
-    //         // }
-            
-    //         // var content = fs.readFileSync("/root/resume/bin/resumeanalysis/log/failed/20140116161322.err.log");
-    //         // return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
-    //     }
-    // },
-    // function (err, results) {
-    //     debugCtrller("enter callback");
-    //     debugCtrller("results : %s", results);
-    //     if (err || !results) {
-    //         return res.send(resUtil.generateRes(null, err.statusCode));
-    //     }
-
-    //     // if (results.runShell) {
-    //     //     var filePathStr = results.runShell;
-    //     //     debugCtrller(filePathStr);
-    //     //     var pathObj = handlerStdoutFilePath(filePathStr);
-    //     //     var content = "";
-
-    //     //     if (pathObj && pathObj.err) {
-    //     //         content = fs.readFileSync(pathObj.err);
-    //     //     } else if (pathObj && pathObj.dup) {
-    //     //         content = fs.readFileSync(pathObj.dup);
-    //     //     }
-            
-    //     //     return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
-    //     // }
-
-    //     return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
-    // });
+        return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
+    });
     
 };
 
