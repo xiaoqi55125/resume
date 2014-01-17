@@ -19,6 +19,7 @@
 <script type="text/javascript">
     $(document).ready(function(){
         loadAjaxUpload();
+        $("#logErrAndDup").hide();
     });
 </script>
 <div class="main_div">
@@ -33,14 +34,8 @@
     <hr>
     <h3>上传日志</h3>
     <hr>
-    <div class="jumbotron">
-        
-        <p>
-            The log about uploading !
-        </p>
-        <p>
-            <a class="btn btn-primary btn-lg" role="button">返回查询</a>
-        </p>
+    <div id="logErrAndDup" class="jumbotron">
+        <div id="showDetail"></div>
     </div>
 
 </div>
