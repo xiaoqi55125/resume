@@ -152,9 +152,9 @@ exports.upload = function (req, res, next) {
             var content = "";
 
             if (pathObj && pathObj.err && fs.existsSync(pathObj.err)) {
-                content = fs.readFileSync(pathObj.err);
+                content = fs.readFileSync(pathObj.err, { encoding : "String" });
             } else if (pathObj && pathObj.dup && fs.existsSync(pathObj.dup)) {
-                content = fs.readFileSync(pathObj.dup);
+                content = fs.readFileSync(pathObj.dup, { encoding : "String" });
             }
             
             return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
