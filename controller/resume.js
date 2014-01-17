@@ -149,15 +149,15 @@ exports.upload = function (req, res, next) {
             var filePathStr = results.runShell;
             debugCtrller(filePathStr);
             var pathObj = handlerStdoutFilePath(filePathStr);
-            var content = "";
+            var contentObj = {};
 
             if (pathObj && pathObj.err && fs.existsSync(pathObj.err)) {
-                content = fs.readFileSync(pathObj.err, { encoding : "utf8" });
+                contentObj.err = fs.readFileSync(pathObj.err, { encoding : "utf8" });
             } else if (pathObj && pathObj.dup && fs.existsSync(pathObj.dup)) {
-                content = fs.readFileSync(pathObj.dup, { encoding : "utf8" });
+                contentObj.dup = fs.readFileSync(pathObj.dup, { encoding : "utf8" });
             }
             
-            return res.send(resUtil.generateRes(content, config.statusCode.STATUS_OK));
+            return res.send(resUtil.generateRes(contentObj, config.statusCode.STATUS_OK));
         }
 
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
