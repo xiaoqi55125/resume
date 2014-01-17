@@ -1,6 +1,6 @@
 <head>
 <!-- script -->
-<%- Loader("/public/javascript/index.min.js")
+<%- Loader()
 	.js("/public/javascript/bootstrap-select.js")
 	.js("/public/javascript/bootstrap-datepicker.js")
 	.js("/public/javascript/bootbox.min.js")
@@ -8,10 +8,9 @@
 	.done(assets)
 	%>
 <!-- style -->
-<%- Loader("/public/stylesheets/index.min.css")
-	.css("/public/stylesheets/index.css")
-	.css("/public/stylesheets/bootstrap-select.css")
-	.css("/public/stylesheets/datepicker.css")
+<%- Loader()
+	.css("/public/stylesheet/bootstrap-select.css")
+	.css("/public/stylesheet/datepicker.css")
 	.done(assets)
 	%></head>
 
