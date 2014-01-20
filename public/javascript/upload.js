@@ -26,8 +26,22 @@ function loadAjaxUpload() {
         },
         onComplete: function(file, response) {
             if (!response.statusCode) {
+            	$("#showDetail").html("");
+            	$("#logErrAndDup").hide();
                 oBtn.value = "上传成功,继续上传?";
                 oRemind.innerHTML = "";
+                var tempLog = "";
+                if (response.data.err) {
+                    $("#logErrAndDup").show();
+                    tempLog += "<p>错误信息</p>"
+                    tempLog += "<p>" + response.data.err + "</p>";
+                }
+                if (response.data.dup) {
+                    $("#logErrAndDup").show();
+                    tempLog += "<p>重复信息</p>"
+                    tempLog += "<p>" + response.data.dup + "</p>";
+                }
+                $("#showDetail").append(tempLog);
             }
         }
     });
