@@ -36,9 +36,10 @@ function resumeSearch(pageSize, pageIndex) {
         //data: $('form.resumeSearchForm').serialize(),
         success: function(data) {
             if (data.statusCode === 0) {
-                changeListView(data.data);
-                changeMainTextValue(data.data[0]);
+                changeListView(data.data.query);
+                changeMainTextValue(data.data.query[0]);
             }
+
         }
     })
 }
