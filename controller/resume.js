@@ -50,9 +50,9 @@ exports.query = function (req, res, next) {
             conditions.query.userName = userName;
         }
 
-        if (req.body.pagingInfo) {
-            var pageSize = req.body.pagingInfo.pageSize || config.default_page_size;
-            var pageIndex = req.body.pagingInfo.pageIndex || 1;
+        if (req.body.pageSize && req.body.pageIndex) {
+            var pageSize = req.body.pageSize || config.default_page_size;
+            var pageIndex = req.body.pageIndex || 1;
             pageSize = sanitize(sanitize(pageSize).trim()).xss();
             pageIndex = sanitize(sanitize(pageIndex).trim()).xss();
 
