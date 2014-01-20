@@ -91,17 +91,16 @@ exports.query = function (req, res, next) {
             return res.send(resUtil.generateRes(null, err.statusCode));
         }
 
-        console.log(results);
-
         if (results.query && results.count) {
+            var data = {};
+            data.query = results.query;
+            data.total = results.count;
+
+            return res.send(resUtil.generateRes(data, config.statusCode.STATUS_OK));
+        } else {
             return res.send(resUtil.generateRes(null, config.statusCode.STATUS_DBERROR));
         }
-
-        var data = {};
-        data.query = results.query;
-        data.total = results.count;
-
-        return res.send(resUtil.generateRes(data, config.statusCode.STATUS_OK));
+        
     });
     
 };
