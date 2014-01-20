@@ -37,12 +37,25 @@ exports.getResumeWithConditions = function (conditions, callback) {
 
     if (conditions.pagingInfo) {
         if (conditions.pagingInfo.pageSize && conditions.pagingInfo.pageIndex) {
-            query.skip((pageIndex - 1) * pageSize);
-            query.limit(pageSize);
+            debugProxy("enter paging logic");
+            query.skip((conditions.pagingInfo.pageIndex - 1) * conditions.pagingInfo.pageSize);
+            query.limit(conditions.pagingInfo.pageSize);
         }
     }
 
     query.exec(callback);
 };
+
+/**
+ * get resume count with query condition
+ * @param  {Object}   conditions the query conditions
+ * @param  {Function} callback   the cb func
+ * @return {null}              
+ */
+exports.getResumeCountWithConditions = function (conditions, callback) {
+    debugProxy("/proxy/resume/getResumeCountWithConditions");
+
+    Users.count(conditions.query, callback);
+}
 
 

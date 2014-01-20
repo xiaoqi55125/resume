@@ -44,6 +44,7 @@ exports.query = function (req, res, next) {
 
     var conditions   = {};
     conditions.query = {};
+
     try {
         if (req.body.userName) {
             var userName = sanitize(sanitize(req.body.userName).trim()).xss();
@@ -51,11 +52,13 @@ exports.query = function (req, res, next) {
         }
 
         if (req.body.pageSize && req.body.pageIndex) {
+            
             var pageSize = req.body.pageSize || config.default_page_size;
             var pageIndex = req.body.pageIndex || 1;
             pageSize = sanitize(sanitize(pageSize).trim()).xss();
             pageIndex = sanitize(sanitize(pageIndex).trim()).xss();
 
+            conditions.pagingInfo = {};
             conditions.pagingInfo.pageSize = pageSize;
             conditions.pagingInfo.pageIndex = pageIndex;
         }
@@ -64,15 +67,43 @@ exports.query = function (req, res, next) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
     
-    
-    Resume.getResumeWithConditions(conditions, function (err, result) {
-        if (err) {
+    async.series({
+        query   :   function (callback) {
+            Resume.getResumeWithConditions(conditions, function (err, result) {
+                if (err) {
+                    return callback(new DBError(), null);
+                }
+
+                callback(null, result);
+            });
+        },
+        count   :   function (callback) {
+            Resume.getResumeCountWithConditions(conditions, function (err, result) {
+                if (err) {
+                    return callback(new DBError(), null);
+                }
+
+                callback(null, result);
+            });
+        }
+    }, function (err, results) {
+         if (err) {
             return res.send(resUtil.generateRes(null, err.statusCode));
         }
 
-        debugCtrller(result);
-        return res.send(resUtil.generateRes(result, config.statusCode.STATUS_OK));
+        console.log(results);
+
+        if (results.query && results.count) {
+            return res.send(resUtil.generateRes(null, config.statusCode.STATUS_DBERROR));
+        }
+
+        var data = {};
+        data.query = results.query;
+        data.total = results.count;
+
+        return res.send(resUtil.generateRes(data, config.statusCode.STATUS_OK));
     });
+    
 };
 
 /**
