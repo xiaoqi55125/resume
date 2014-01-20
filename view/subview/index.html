@@ -22,10 +22,12 @@
 		$("#resumeDetail").hide();
 
 		$('#paginator_div').pagination({
-	        items: 1,
-	        itemsOnPage: 1,
+	        items: 200,
+	        itemsOnPage: 10,
 	        currentPage:1,
 	        cssStyle: 'light-theme',
+	        displayedPages:0,
+	        edges:0,
 	        onPageClick: function(pageNum){
 	                   
 	        }
