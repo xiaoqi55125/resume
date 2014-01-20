@@ -34,7 +34,7 @@ exports.appErrorProcess = function (app) {
     //config for production env
     app.configure(function () {
         //error hanlder
-        app.error(function(err, req, res, next) {
+        app.use(function(err, req, res, next) {
             if (err instanceof PageNotFoundError) {
                 res.render("error/404");
             } else if (err instanceof ServerError) {
