@@ -244,8 +244,14 @@ function handlerStdoutFilePath (stdout) {
 function reformatFileContent (content) {
     var lines = content.split(/[\r\n]/g);
 
-    if (!lines) {
+    if (!lines || lines.length === 0) {
         return null;
+    }
+
+    //process last line
+    var lastLine = lines[lines.length - 1];
+    if (lastLine || lastLine.length === 0) {
+        lines.pop();        //remove
     }
 
     return lines.map(splitFieldPerLine);
@@ -269,6 +275,24 @@ function splitFieldPerLine (lineContent) {
 
     return {
         dateTime : splitedArr[0] + " " + splitedArr[1],
-        resumeName : splitedArr[2]
+        resumeName : removePrefixPath(splitedArr[2])
     };
+}
+
+/**
+ * process resume path by removing resume's prefix path
+ * @param  {String} resumePath resume file's path
+ * @return {String}            resume file name
+ */
+function removePrefixPath (resumePath) {
+    if (!resumePath) {
+        return "";
+    }
+
+    var index = resumePath.lastIndexOf("/");
+    if (index === -1) {
+        return resumePath;
+    }
+    
+    return resumePath.substring(index + 1, resumePath.length);
 }
