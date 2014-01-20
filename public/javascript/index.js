@@ -24,20 +24,37 @@
  * do the resume search
  * @return {null}
  */
-function resumeSearch(pageSize, pageIndex) {
+function resumeSearch(pageIndex) {
     //without check
     $.ajax({
         url: '/resume/query',
         type: 'POST',
         data: {
             'pageSize': 10,
-            'pageIndex': 1
+            'pageIndex': pageIndex,
+            'userName': $("#userName").val()
         },
-        //data: $('form.resumeSearchForm').serialize(),
         success: function(data) {
             if (data.statusCode === 0) {
                 changeListView(data.data.query);
-                changeMainTextValue(data.data.query[0]);
+                //changeMainTextValue(data.data.query[0]);
+                if (data.data.total > 10) {
+                    $('#paginator_div').show();
+                    $('#paginator_div').pagination({
+                        items: data.data.total,
+                        itemsOnPage: 10,
+                        currentPage: pageIndex,
+                        cssStyle: 'light-theme',
+                        displayedPages: 0,
+                        edges: 0,
+                        onPageClick: function(pageNum) {
+                            resumeSearch(pageNum);
+                        }
+                    });
+                }
+            }else{
+              $("#listView").html("");
+              $('#paginator_div').hide();
             }
 
         }

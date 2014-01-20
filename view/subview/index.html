@@ -21,17 +21,7 @@
 		$("#resumeList").hide();
 		$("#resumeDetail").hide();
 
-		$('#paginator_div').pagination({
-	        items: 200,
-	        itemsOnPage: 10,
-	        currentPage:1,
-	        cssStyle: 'light-theme',
-	        displayedPages:0,
-	        edges:0,
-	        onPageClick: function(pageNum){
-	                   
-	        }
-      	});
+
 	});
 </script>
 <div class="main_div">
@@ -41,7 +31,7 @@
 		<div class="row">
 			<div class="col-md-2">
 				姓名:
-				<input class="form-control" name="userName"></div>
+				<input class="form-control" name="userName" id="userName"></div>
 			<div class="col-md-2">
 				毕业院校:
 				<input class="form-control"></div>
