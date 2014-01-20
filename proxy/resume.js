@@ -33,8 +33,16 @@ var Users  = models.users;
  */
 exports.getResumeWithConditions = function (conditions, callback) {
     debugProxy("/proxy/resume/getResumeWithConditions");
-    console.log(conditions);
-    Users.find(conditions).select().exec(callback);
+    var query = Users.find(conditions.query).select();
+
+    if (conditions.pagingInfo) {
+        if (conditions.pagingInfo.pageSize && conditions.pagingInfo.pageIndex) {
+            query.skip((pageIndex - 1) * pageSize);
+            query.limit(pageSize);
+        }
+    }
+
+    query.exec(callback);
 };
 
 

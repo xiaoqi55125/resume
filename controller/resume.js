@@ -42,12 +42,24 @@ var execSync = require("execSync");
 exports.query = function (req, res, next) {
     debugCtrller("/controller/resume/query");
 
-    var conditions = {};
+    var conditions   = {};
+    conditions.query = {};
     try {
         if (req.body.userName) {
             var userName = sanitize(sanitize(req.body.userName).trim()).xss();
-            conditions.userName = userName;
+            conditions.query.userName = userName;
         }
+
+        if (req.body.pagingInfo) {
+            var pageSize = req.body.pagingInfo.pageSize || config.default_page_size;
+            var pageIndex = req.body.pagingInfo.pageIndex || 1;
+            pageSize = sanitize(sanitize(pageSize).trim()).xss();
+            pageIndex = sanitize(sanitize(pageIndex).trim()).xss();
+
+            conditions.pagingInfo.pageSize = pageSize;
+            conditions.pagingInfo.pageIndex = pageIndex;
+        }
+
     } catch (e) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
