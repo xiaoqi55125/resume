@@ -211,6 +211,33 @@ exports.upload = function (req, res, next) {
 };
 
 /**
+ * send resume's source file
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.sourceFile = function (req, res, next) {
+    debugCtrller("controller/resume/sourceFile");
+    var prefixPath = "./bin/resumeanalysis/log/exported/";
+    var absoluteDirPath = path.resolve(__dirname , "../", prefixPath);
+
+    var fileName = req.params.fileName;
+    if (!fileName) {
+        return next(new PageNotFoundError());
+    }
+
+    var fullPath = absoluteDirPath + fileName;
+    debugCtrller(fullPath);
+    var exists = fs.existsSync(fullPath);
+    if (!exists) {
+        return next(new PageNotFoundError());
+    }
+
+    return res.sendfile(prefixPath + fileName);
+};
+
+/**
  * handle resume analysis script's std out file path
  * @param  {String} stdout        the shell's stdout
  * @return {Object}     the process object
