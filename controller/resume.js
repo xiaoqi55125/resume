@@ -194,9 +194,11 @@ exports.upload = function (req, res, next) {
             };
 
             if (pathObj && pathObj.err && fs.existsSync(pathObj.err)) {
-                contentObj.err = fs.readFileSync(pathObj.err, { encoding : "utf8" });
+                var content    = fs.readFileSync(pathObj.err, { encoding : "utf8" });
+                contentObj.err = reformatFileContent(content);
             } else if (pathObj && pathObj.dup && fs.existsSync(pathObj.dup)) {
-                contentObj.dup = fs.readFileSync(pathObj.dup, { encoding : "utf8" });
+                var content    = fs.readFileSync(pathObj.dup, { encoding : "utf8" });
+                contentObj.dup = reformatFileContent(content);
             }
             
             return res.send(resUtil.generateRes(contentObj, config.statusCode.STATUS_OK));
@@ -231,4 +233,41 @@ function handlerStdoutFilePath (stdout) {
     }
 
     return result;
+}
+
+/**
+ * reformat file content (split with \n)
+ * @param  {String} content the content's str
+ * @return {Array}         processed array
+ */
+function reformatFileContent (content) {
+    var lines = content.split(/[\r\n]/g);
+
+    if (!lines) {
+        return null;
+    }
+
+    return lines.map(splitFieldPerLine);
+}
+
+/**
+ * split fields per line
+ * @param  {String} lineContent the content of every line
+ * @return {Object}             the splited obj
+ */
+function splitFieldPerLine (lineContent) {
+    if (!lineContent) {
+        return {};
+    }
+
+    var splitedArr = lineContent.split(" ");
+
+    if (splitedArr.length != 3) {
+        return {};
+    }
+
+    return {
+        dateTime : splitedArr[0] + " " + splitedArr[1],
+        resumeName : splitedArr[2]
+    };
 }
