@@ -34,12 +34,38 @@
   res.render('error/404');
 };
 
+/**
+ * index page controller
+ * @param  {object}   req  the instance of request
+ * @param  {object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}
+ */
 exports.index = function (req, res, next) {
   debugCtrller("/controller/render/index");
   res.render('subview/index');
 }
 
+/**
+ * upload page controller
+ * @param  {object}   req  the instance of request
+ * @param  {object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}
+ */
 exports.upload = function (req, res, next) {
   debugCtrller("/controller/render/upload");
   res.render('subview/upload');
 }
+
+/**
+ * show login page
+ * @param  {object}   req  the request object
+ * @param  {object}   res  the response object
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.showLogin = function (req, res, next) {
+    debugCtrller("controllers/login/showLogin");
+    res.render("login");
+};
