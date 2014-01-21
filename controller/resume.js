@@ -188,8 +188,8 @@ exports.upload = function (req, res, next) {
             debugCtrller(filePathStr);
             var pathObj = handlerStdoutFilePath(filePathStr);
             var contentObj = {
-                err     : "",
-                dup     : ""
+                err     : [],
+                dup     : []
             };
 
             if (pathObj && pathObj.err && fs.existsSync(pathObj.err)) {
@@ -199,6 +199,8 @@ exports.upload = function (req, res, next) {
                 var content    = fs.readFileSync(pathObj.dup, { encoding : "utf8" });
                 contentObj.dup = reformatFileContent(content);
             }
+
+            console.log(contentObj);
             
             return res.send(resUtil.generateRes(contentObj, config.statusCode.STATUS_OK));
         }
@@ -206,6 +208,33 @@ exports.upload = function (req, res, next) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
     });
     
+};
+
+/**
+ * send resume's source file
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.sourceFile = function (req, res, next) {
+    debugCtrller("controller/resume/sourceFile");
+    var prefixPath = "./bin/resumeanalysis/log/exported/";
+    var absoluteDirPath = path.resolve(__dirname , "../", prefixPath);
+
+    var fileName = req.params.fileName;
+    if (!fileName) {
+        return next(new PageNotFoundError());
+    }
+
+    var fullPath = absoluteDirPath + fileName;
+    debugCtrller(fullPath);
+    var exists = fs.existsSync(fullPath);
+    if (!exists) {
+        return next(new PageNotFoundError());
+    }
+
+    return res.sendfile(prefixPath + fileName);
 };
 
 /**
@@ -242,8 +271,14 @@ function handlerStdoutFilePath (stdout) {
 function reformatFileContent (content) {
     var lines = content.split(/[\r\n]/g);
 
-    if (!lines) {
+    if (!lines || lines.length === 0) {
         return null;
+    }
+
+    //process last line
+    var lastLine = lines[lines.length - 1];
+    if (lastLine || lastLine.length === 0) {
+        lines.pop();        //remove
     }
 
     return lines.map(splitFieldPerLine);
@@ -267,6 +302,24 @@ function splitFieldPerLine (lineContent) {
 
     return {
         dateTime : splitedArr[0] + " " + splitedArr[1],
-        resumeName : splitedArr[2]
+        resumeName : removePrefixPath(splitedArr[2])
     };
+}
+
+/**
+ * process resume path by removing resume's prefix path
+ * @param  {String} resumePath resume file's path
+ * @return {String}            resume file name
+ */
+function removePrefixPath (resumePath) {
+    if (!resumePath) {
+        return "";
+    }
+
+    var index = resumePath.lastIndexOf("/");
+    if (index === -1) {
+        return resumePath;
+    }
+    
+    return resumePath.substring(index + 1, resumePath.length);
 }

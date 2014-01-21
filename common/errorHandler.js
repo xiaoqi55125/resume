@@ -32,19 +32,13 @@ var mailServie = require("../service/mail");
  */
 exports.appErrorProcess = function (app) {
     //config for production env
-    app.configure("production", function () {
+    app.configure(function () {
         //error hanlder
-        app.error(function(err, req, res, next) {
-            console.log(err);
-            console.log("error:" + err.stack || err.message);
-            mailServie.sendMail({
-              subject : "FixedAssetManager_Server[App Error]",
-              text    : err.message + "\n" + err.stack + "\n" + err.toString()
-            });
+        app.use(function(err, req, res, next) {
             if (err instanceof PageNotFoundError) {
-                res.render("errors/404");
+                res.render("error/404");
             } else if (err instanceof ServerError) {
-                res.render("errors/500");
+                res.render("error/500");
             }
         });
 
