@@ -236,11 +236,14 @@ exports.sourceFile = function (req, res, next) {
 
     for (var i = 0; i < tmpFileNameArr.length; i++) {
         var fullPath = absoluteDirPath + tmpFileNameArr[i];
+        debugCtrller(fullPath);
         if (fs.existsSync(fullPath)) {
             realName = tmpFileNameArr[i];
             break;
         }
     }
+
+    debugCtrller(realName);
 
     if (!realName) {
         return next(new PageNotFoundError());
