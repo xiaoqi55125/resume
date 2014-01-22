@@ -116,8 +116,10 @@ exports.signUp = function (req, res, next) {
 
     Login.createAccount(account, function (err) {
         if (err) {
-            return res.send(resUtil.generateRes(null, config.))
-        };
+            return res.send(resUtil.generateRes(null, config.statusCode.STATUS_DBERROR));
+        }
+
+        return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
     });
 }
 
