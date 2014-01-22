@@ -224,6 +224,8 @@ exports.sourceFile = function (req, res, next) {
         return next(new PageNotFoundError());
     }
 
+    debugCtrller(fileName);
+
     var extArr = [ "", ".htm", ".html" ];
 
     var tmpFileNameArr = extArr.map(function (item) {
