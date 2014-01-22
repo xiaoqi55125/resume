@@ -17,23 +17,19 @@
   limitations under the License.
   ---
   Created with Sublime Text 2.
-  Date: Jan 13, 2014
-  Time: 2:38 PM
-  Desc: the list of model's definition
+  Date: Jan 20, 2014
+  Time: 4:22 PM
+  Desc: the model of login
  */
 
 var mongoose = require("mongoose");
-var config   = require("../config").config;
+var Schema = mongoose.Schema;
 
-mongoose.connect(config.db, function (err) {
-    if (err) {
-        debugOther("an error occured at model/index.js. msg: %s", err);
-        process.exit(1);
-    }
+var LoginInfoSChema = new Schema({
+    userName        : String,
+    salt            : String,
+    encryptPwd      : String,
+    lastLoginTime   : { type : Date, default : Date.now }
 });
 
-require("./user");
-require("./login");
-
-exports.users     = mongoose.model("users");
-exports.loginInfo = mongoose.model("loginInfo");
+mongoose.model("loginInfo", LoginInfoSChema);
