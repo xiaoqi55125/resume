@@ -52,9 +52,9 @@ function resumeSearch(pageIndex) {
                         }
                     });
                 }
-            }else{
-              $("#listView").html("");
-              $('#paginator_div').hide();
+            } else {
+                $("#listView").html("");
+                $('#paginator_div').hide();
             }
 
         }
@@ -77,6 +77,11 @@ function changeMainTextValue(data) {
     $("#mobile").html(data.mobile);
     $("#birth").html(data.birthday);
     $("#rFrom").html(data.source);
+     $("#resumeDetailBtn").unbind();
+    $("#resumeDetailBtn").click(function() {
+        window.open("resume/source/"+data.resumeFileName);
+    })
+
     //college
     $("#college").html(data.education.college);
     $("#degree").html(data.education.degree);
@@ -90,8 +95,8 @@ function changeMainTextValue(data) {
         var cnt = i + 1;
         var temp = "<tr><td>" +
             cnt + "</td><td>" +
-            cellData.position + "</td><td>" +
             cellData.company + "</td><td>" +
+            cellData.position + "</td><td>" +
             cellData.time + "</td></tr>";
         $("#experienceAttr").append(temp);
     };
