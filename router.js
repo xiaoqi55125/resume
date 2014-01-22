@@ -24,6 +24,7 @@
 
 var resumeCtrller = require("./controller/resume");
 var resumeRender  = require('./controller/render');
+var loginCtrller  = require("./controller/login");
 
 module.exports = function (app) {
 
@@ -34,11 +35,13 @@ module.exports = function (app) {
     //page
     app.get("/",resumeRender.index);
     app.get("/upload",resumeRender.upload);
-    app.get("/resume/:fileName/source", resumeCtrller.sourceFile);
+    app.get("/resume/source/:fileName", resumeCtrller.sourceFile);
 
     //api 
     app.post("/resume/query", resumeCtrller.query);
     app.post("/resume/upload", resumeCtrller.upload);
+    app.post("/signin", loginCtrller.signIn);
+    app.post("/signup", loginCtrller.signUp);
     
     //can't mapping router
     app.get("*", resumeRender.fourofour);

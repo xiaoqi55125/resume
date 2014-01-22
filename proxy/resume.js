@@ -56,6 +56,6 @@ exports.getResumeCountWithConditions = function (conditions, callback) {
     debugProxy("/proxy/resume/getResumeCountWithConditions");
 
     Users.count(conditions.query, callback);
-}
+};
 
 

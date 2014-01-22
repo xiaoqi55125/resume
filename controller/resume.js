@@ -88,18 +88,15 @@ exports.query = function (req, res, next) {
         }
     }, function (err, results) {
          if (err) {
+            debugCtrller(err);
             return res.send(resUtil.generateRes(null, err.statusCode));
         }
 
-        if (results.query && results.count) {
-            var data = {};
-            data.query = results.query;
-            data.total = results.count;
+        var data = {};
+        data.query = results.query;
+        data.total = results.count;
 
-            return res.send(resUtil.generateRes(data, config.statusCode.STATUS_OK));
-        } else {
-            return res.send(resUtil.generateRes(null, config.statusCode.STATUS_DBERROR));
-        }
+        return res.send(resUtil.generateRes(data, config.statusCode.STATUS_OK));
         
     });
     
