@@ -34,7 +34,7 @@ var LoginInfo = models.loginInfo;
 exports.getUserAuthInfoByUserName = function(userName, callback) {
     debugProxy("/proxy/login/getUserAuthInfoByUserName");
     
-    var query = Users.find({ userName : userName }).select();
+    var query = LoginInfo.findOne({ userName : userName }).select();
     query.exec(callback);
 };
 
@@ -47,4 +47,4 @@ exports.getUserAuthInfoByUserName = function(userName, callback) {
 exports.createAccount = function (accountEntity, callback) {
     debugProxy("/proxy/login/createAccount");
     accountEntity.save(callback);
-}
+};

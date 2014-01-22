@@ -28,9 +28,11 @@ var captchagen = require('captchagen');
 var check      = require("validator").check;
 var sanitize   = require("validator").sanitize;
 var SHA256     = require("crypto-js/sha256");
-var AES        = require("crypto-js/aes");
+var SHA3       = require("crypto-js/sha3");
 var resUtil    = require("../lib/resUtil");
 var LoginInfo  = require("../model").loginInfo;
+var config     = require("../config").config;
+var async      = require("async");
 
 /**
  * handler sign in
@@ -42,17 +44,19 @@ var LoginInfo  = require("../model").loginInfo;
 exports.signIn = function (req, res, next) {
     debugCtrller("controllers/login/signIn");
     var captchaCode = req.body.auth.captchaCode || "";
-    var userId      = req.body.auth.userId || "";
+    var userName    = req.body.auth.userName || "";
     var passwd      = req.body.auth.passwd || "";
 
     try {
         check(captchaCode).notEmpty();
-        check(userId).notEmpty();
+        check(userName).notEmpty();
         check(passwd).notEmpty();
+
         captchaCode = sanitize(sanitize(captchaCode).trim()).xss();
-        userId      = sanitize(sanitize(userId).trim()).xss();
+        userName    = sanitize(sanitize(userName).trim()).xss();
         passwd      = sanitize(sanitize(passwd).trim()).xss();
     } catch (e) {
+        debugCtrller("5");
         return res.send("5");
     }
 
@@ -61,8 +65,9 @@ exports.signIn = function (req, res, next) {
         return res.send("4");
     }
 
-    Login.getUserAuthInfoByUserId(userId, function (err, userAuthInfo) {
+    Login.getUserAuthInfoByUserName(userName, function (err, userAuthInfo) {
         if (err) {
+            debugCtrller(err);
             return res.send("3");
         }
 
@@ -70,15 +75,21 @@ exports.signIn = function (req, res, next) {
             return res.send("2");
         }
 
+        var salt      = SHA256(userName).toString();
+        var encryptPwd = SHA3(passwd + salt).toString();
+
         //check
-        if (userId === userAuthInfo.uid && passwd === userAuthInfo.pwd) {
+        if (userName === userAuthInfo.userName && salt === userAuthInfo.salt 
+            && encryptPwd === userAuthInfo.encryptPwd) {
             var user         = {};
-            user.userId      = userId;
-            user.uName       = userAuthInfo.uName; 
+            user.userName    = userAuthInfo.userName; 
             req.session.user = user;
+
+            debugCtrller("success");
 
             return res.send("1");
         } else {
+            debugCtrller("error");
             return res.send("0");
         }
     });
@@ -106,22 +117,57 @@ exports.signUp = function (req, res, next) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
 
-    var pwdInfo = processPassword(userName, hashedPwd);
+    async.waterfall([
+        function (callback) {
+            debugCtrller("check");
+            Login.getUserAuthInfoByUserName(userName, function (err, userAuthInfo) {
+                if (err) {
+                    return callback(new DBError(), null);
+                }
 
-    var account = new LoginInfo({
-        userName  : userName,
-        salt      : pwdInfo.salt,
-        encryptPwd: pwdInfo.encryptPwd
-    });
+                callback(null, userAuthInfo);
+            });
+        },
+        function (userAuthInfo, callback) {
+            debugCtrller("enter create function");
+            if (userAuthInfo) {
+                return callback(null, userAuthInfo);
+            }
 
-    Login.createAccount(account, function (err) {
+            debugCtrller("do create");
+            var pwdInfo = processPassword(userName, hashedPwd);
+
+            var account = new LoginInfo({
+                userName  : userName,
+                salt      : pwdInfo.salt,
+                encryptPwd: pwdInfo.encryptPwd
+            });
+
+            Login.createAccount(account, function (err) {
+                if (err) {
+                    debugCtrller(err);
+                    return callback(new DBError(), null);
+                }
+
+                return callback(null, null);
+            });
+        }
+    ],  function (err, results) {
         if (err) {
-            return res.send(resUtil.generateRes(null, config.statusCode.STATUS_DBERROR));
+            debugCtrller(err);
+            return res.send(resUtil.generateRes(null, err.statusCode));
         }
 
-        return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
+        if (results) {
+            debugCtrller("user has existed");
+            return res.send(resUtil.generateRes(0, config.statusCode.STATUS_OK));
+        }
+
+        debugCtrller("signUp success");
+        return res.send(resUtil.generateRes(1, config.statusCode.STATUS_OK));
     });
-}
+    
+};
 
 /**
  * generate captcha image
@@ -177,8 +223,9 @@ function processPassword (userName, hashedPwd) {
         return null;
     }
 
-    var salt       = AES(userName);
-    var encryptPwd = SHA256(salt + hashedPwd);
+    var salt       = SHA256(userName).toString();
+    debugCtrller(salt);
+    var encryptPwd = SHA3(hashedPwd + salt).toString();
 
     return {
         salt        : salt,
