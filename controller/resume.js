@@ -224,14 +224,27 @@ exports.sourceFile = function (req, res, next) {
         return next(new PageNotFoundError());
     }
 
-    var fullPath = absoluteDirPath + fileName;
-    debugCtrller(fullPath);
-    var exists = fs.existsSync(fullPath);
-    if (!exists) {
+    var extArr = [ "", ".htm", ".html" ];
+
+    var tmpFileNameArr = extArr.map(function (item) {
+         return fileName + item;
+    });
+
+    var realName;
+
+    for (var i = 0; i < tmpFilePathArr.length; i++) {
+        var fullPath = absoluteDirPath + tmpFilePathArr[i];
+        if (fs.existsSync(fullPath)) {
+            realName = tmpFilePathArr[i];
+            break;
+        }
+    }
+
+    if (!realName) {
         return next(new PageNotFoundError());
     }
 
-    return res.sendfile(prefixPath + fileName);
+    return res.sendfile(prefixPath + realName);
 };
 
 /**
