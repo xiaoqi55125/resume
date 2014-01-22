@@ -235,7 +235,7 @@ exports.sourceFile = function (req, res, next) {
     var realName;
 
     for (var i = 0; i < tmpFileNameArr.length; i++) {
-        var fullPath = absoluteDirPath + tmpFileNameArr[i];
+        var fullPath = absoluteDirPath + "/" + tmpFileNameArr[i];
         debugCtrller(fullPath);
         if (fs.existsSync(fullPath)) {
             realName = tmpFileNameArr[i];

@@ -36,9 +36,9 @@ exports.appErrorProcess = function (app) {
         //error hanlder
         app.use(function(err, req, res, next) {
             if (err instanceof PageNotFoundError) {
-                res.render("error/404");
+                return res.render("error/404");
             } else if (err instanceof ServerError) {
-                res.render("error/500");
+                return res.render("error/500");
             }
         });
 
