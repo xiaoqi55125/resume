@@ -232,10 +232,10 @@ exports.sourceFile = function (req, res, next) {
 
     var realName;
 
-    for (var i = 0; i < tmpFilePathArr.length; i++) {
-        var fullPath = absoluteDirPath + tmpFilePathArr[i];
+    for (var i = 0; i < tmpFileNameArr.length; i++) {
+        var fullPath = absoluteDirPath + tmpFileNameArr[i];
         if (fs.existsSync(fullPath)) {
-            realName = tmpFilePathArr[i];
+            realName = tmpFileNameArr[i];
             break;
         }
     }
