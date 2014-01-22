@@ -244,6 +244,8 @@ exports.sourceFile = function (req, res, next) {
         return next(new PageNotFoundError());
     }
 
+    debugCtrller(prefixPath + realName);
+
     return res.sendfile(prefixPath + realName);
 };
 
