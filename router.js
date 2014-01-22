@@ -37,6 +37,7 @@ module.exports = function (app) {
     app.get("/upload",resumeRender.upload);
     app.get("/resume/source/:fileName", resumeCtrller.sourceFile);
     app.get("/login",resumeRender.showLogin);
+    app.个头("/addUser",resumeRender.addUser);
 
     //api 
     app.post("/resume/query", resumeCtrller.query);
