@@ -31,7 +31,7 @@ exports.config = {
     description         : "Fixed Asset Manager",
     version             : "0.0.1",
 
-    port                : 8088,
+    port                : 8888,
 
     site_headers        : [
         '<meta name="author" content="freedom" />',
