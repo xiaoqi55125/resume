@@ -1,0 +1,28 @@
+<head>
+<!-- script -->
+<%- Loader()
+	.js("/public/javascript/bootbox.min.js")
+	.js("/public/javascript/index.js")
+	.js("/public/lib/jquery/jquery.simplePagination.js")
+	.done(assets)
+	%>
+<!-- style -->
+<%- Loader()
+	.css("/public/stylesheet/login.css")
+	.done(assets)
+	%></head>
+
+<div class="main_div">
+	<div class="main_div2">
+		<form id="signinForm" class="form-signin" onsubmit="return postAuthUserForm();">
+			<h2 class="form-signin-heading">新增用户</h2>
+			<input id="input_userId" type="text" class="form-control" placeholder="用户名" required autofocus>
+			<input id="input_pwd" type="password" class="form-control" placeholder="密 码" required>
+			<div id="captcha_div"></div>
+			<button id="submitBtn" class="btn btn-lg btn-primary btn-block margin-topForLoginBtn" type="submit" >登 录</button>
+			<div id="div_tip" class="alert alert-danger fade in margin-topForTipDiv">
+				<span id="span_tipMsg"></span>
+			</div>
+		</form>
+	</div>
+</div>

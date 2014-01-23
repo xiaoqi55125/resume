@@ -69,3 +69,15 @@ exports.showLogin = function (req, res, next) {
     debugCtrller("controllers/login/showLogin");
     res.render("login");
 };
+
+/**
+ * show addUser page
+ * @param  {object}   req  the request object
+ * @param  {object}   res  the response object
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.addUser = function (req, res, next) {
+    debugCtrller("controllers/login/addUser");
+    res.render("subview/addUser");
+};
