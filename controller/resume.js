@@ -246,7 +246,7 @@ exports.sourceFile = function (req, res, next) {
     debugCtrller(realName);
 
     if (!realName) {
-        return next(new PageNotFoundError());
+        return res.redirect("/404");
     }
 
     debugCtrller(prefixPath + realName);
