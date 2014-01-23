@@ -144,12 +144,18 @@ exports.upload = function (req, res, next) {
             if (!ext || (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1)) {
                 var content = fs.readFileSync(uploadFilePath);
                 fs.writeFileSync(transferFilePath, content);
+
                 return callback(null, null);
             } else if (ext.indexOf("zip") != -1) {
                 var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path);
-                var result = execSync.exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath));
+                var resumeDestPath = path.resolve(__dirname, "../", resume_dest_path);
+                var unzipResult    = execSync.exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath));
+                var dirName        = path.basename(fileName, path.extname(fileName));
+                
+                debugCtrller("mv {0}/{1}/* {2}".format(uncompressPath, dirName, resumeDestPath + "/"));
+                var mvResult       = execSync.exec("mv {0}/{1}/* {2}".format(uncompressPath, dirName, resumeDestPath + "/"))
 
-                if (result.stderr) {
+                if (unzipResult.stderr || mvResult.stderr) {
                     return callback(new ServerError(), null);
                 } else {
                     return callback(null, null);
