@@ -182,6 +182,7 @@ exports.upload = function (req, res, next) {
     },
     function (err, results) {
         debugCtrller("enter callback");
+        execSync.exec("rm -rf {0}/*".format(uncompressPath));
         if (err || !results) {
             return res.send(resUtil.generateRes(null, err.statusCode));
         }
