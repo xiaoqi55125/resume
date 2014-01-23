@@ -142,8 +142,8 @@ exports.upload = function (req, res, next) {
             debugCtrller("step pipeHtmlFile");
             var ext = path.extname(fileName);
             if (!ext || (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1)) {
-                var content = fs.readFileSync(uploadFilePath, { encoding : "utf8" });
-                fs.writeFileSync(transferFilePath, content, { encoding : "utf8", flag : "w+" });
+                var content = fs.readFileSync(uploadFilePath);
+                fs.writeFileSync(transferFilePath, content);
                 return callback(null, null);
             } else if (ext.indexOf("zip") != -1) {
                 var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path);
