@@ -52,7 +52,6 @@ app.configure(function () {
     // app.set("view options", {layout : false});
     app.engine('html', require('ejs').renderFile);
 
-
     //middleware
     app.use(require('express-partials')());
     app.use(express.compress());
@@ -68,6 +67,7 @@ app.configure(function () {
             maxAge  : 30 * 60 * 1000      //ms
         }
     }));
+
 });
 
 //custom middleware
