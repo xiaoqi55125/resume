@@ -131,7 +131,7 @@ exports.upload = function (req, res, next) {
     }
 
     var uploadFilePath   = path.resolve(__dirname, "../upload/", fileName);
-    var transferFilePath = path.resolve(__dirname, "../", config.uncompress_file_path, fileName);
+    var transferFilePath = path.resolve(__dirname, "../", config.resume_dest_path, fileName);
 
     async.series({
         renameUploadFile  : function (callback) {
@@ -147,6 +147,8 @@ exports.upload = function (req, res, next) {
         },
         pipeHtmlFile      : function (callback) {
             debugCtrller("step pipeHtmlFile");
+            debugCtrller(uploadFilePath);
+            debugCtrller(transferFilePath);
             if (!ext || (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1)) {
                 var content = fs.readFileSync(uploadFilePath);
                 fs.writeFileSync(transferFilePath, content);
