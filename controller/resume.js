@@ -149,13 +149,13 @@ exports.upload = function (req, res, next) {
 
                 return callback(null, null);
             } else if (ext.indexOf("zip") != -1) {
-                var dirName        = path.basename(fileName, path.extname(fileName));
-                fileName           = "{0}_{1}.{2}".format(dirName, Date.now(), path.extname(fileName));
+                fileName           = path.basename(fileName, path.extname(fileName)) + "_" + Date.now() + "." + path.extname(fileName));
+                debugCtrller(fileName);
                 uploadFilePath     = path.resolve(__dirname, "../upload/", fileName);
                 var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path);
                 var resumeDestPath = path.resolve(__dirname, "../", config.resume_dest_path);
                 var unzipResult    = execSync.exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath));
-                
+                var dirName        = path.basename(fileName, path.extname(fileName));
                 
                 debugCtrller("mv {0}/{1}/* {2}".format(uncompressPath, dirName, resumeDestPath + "/"));
                 var mvResult       = execSync.exec("mv {0}/{1}/* {2} ".format(uncompressPath, dirName, resumeDestPath + "/", uncompressPath));
