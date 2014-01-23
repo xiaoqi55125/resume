@@ -198,7 +198,9 @@ exports.upload = function (req, res, next) {
             if (pathObj && pathObj.err && fs.existsSync(pathObj.err)) {
                 var content    = fs.readFileSync(pathObj.err, { encoding : "utf8" });
                 contentObj.err = reformatFileContent(content);
-            } else if (pathObj && pathObj.dup && fs.existsSync(pathObj.dup)) {
+            } 
+
+            if (pathObj && pathObj.dup && fs.existsSync(pathObj.dup)) {
                 var content    = fs.readFileSync(pathObj.dup, { encoding : "utf8" });
                 contentObj.dup = reformatFileContent(content);
             }
