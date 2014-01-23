@@ -155,14 +155,14 @@ exports.upload = function (req, res, next) {
                 debugCtrller("mv {0}/{1}/* {2}".format(uncompressPath, dirName, resumeDestPath + "/"));
                 var mvResult       = execSync.exec("mv {0}/{1}/* {2}".format(uncompressPath, dirName, resumeDestPath + "/"))
 
+                //clear original files
+                execSync.exec("rm -R {0}/*".format(uncompressPath));
+
                 if (unzipResult.stderr || mvResult.stderr) {
                     return callback(new ServerError(), null);
                 } else {
                     return callback(null, null);
                 }
-
-                //clear original files
-                execSync.exec("rm -R {0}/*".format(uncompressPath));
 
             } else {
                 return callback(new InvalidParamError(), null);
