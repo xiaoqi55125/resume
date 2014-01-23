@@ -161,6 +161,9 @@ exports.upload = function (req, res, next) {
                     return callback(null, null);
                 }
 
+                //clear original files
+                execSync.exec("rm -R {0}/*".format(uncompressPath));
+
             } else {
                 return callback(new InvalidParamError(), null);
             }
