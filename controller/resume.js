@@ -162,7 +162,7 @@ exports.upload = function (req, res, next) {
                 var unzipResult    = execSync.exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath));
                 
                 
-                debugCtrller("mv {0}/{1}/* {2}".format(uncompressPath, dirName, resumeDestPath + "/"));
+                debugCtrller("mv {0}/{1}/* {2} ".format(uncompressPath, fn, resumeDestPath + "/"));
                 var mvResult       = execSync.exec("mv {0}/{1}/* {2} ".format(uncompressPath, fn, resumeDestPath + "/"));
 
                 if (unzipResult.stderr || mvResult.stderr) {
