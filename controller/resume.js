@@ -123,6 +123,7 @@ exports.upload = function (req, res, next) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
 
+    var ext = path.extname(fileName);
     if (ext.indexOf("zip") != -1){
         fileName = path.basename(fileName, path.extname(fileName)) + "_" + Date.now() + path.extname(fileName);
         debugCtrller(fileName);
@@ -145,7 +146,6 @@ exports.upload = function (req, res, next) {
         },
         pipeHtmlFile      : function (callback) {
             debugCtrller("step pipeHtmlFile");
-            var ext = path.extname(fileName);
             if (!ext || (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1)) {
                 var content = fs.readFileSync(uploadFilePath);
                 fs.writeFileSync(transferFilePath, content);
