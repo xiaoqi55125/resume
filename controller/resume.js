@@ -112,18 +112,19 @@ exports.query = function (req, res, next) {
 exports.upload = function (req, res, next) {
     debugCtrller("/controller/resume/upload");
 
-    var fileName  = req.files.file_source.name || "";
+    var fn  = req.files.file_source.name || "";
     var tmp_path  = req.files.file_source.path || "";
 
     try {
-        check(fileName).notEmpty();
+        check(fn).notEmpty();
         check(tmp_path).notEmpty();
-        fileName = sanitize(sanitize(fileName).trim()).xss();
+        fn = sanitize(sanitize(fn).trim()).xss();
     } catch (e) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
 
-    var ext = path.extname(fileName);
+    var ext = path.extname(fn);
+    var fileName = fn;
     if (ext.indexOf("zip") != -1){
         fileName = path.basename(fileName, path.extname(fileName)) + "_" + Date.now() + path.extname(fileName);
         debugCtrller(fileName);
@@ -162,7 +163,7 @@ exports.upload = function (req, res, next) {
                 
                 
                 debugCtrller("mv {0}/{1}/* {2}".format(uncompressPath, dirName, resumeDestPath + "/"));
-                var mvResult       = execSync.exec("mv {0}/{1}/* {2} ".format(uncompressPath, dirName, resumeDestPath + "/", uncompressPath));
+                var mvResult       = execSync.exec("mv {0}/{1}/* {2} ".format(uncompressPath, fn, resumeDestPath + "/"));
 
                 if (unzipResult.stderr || mvResult.stderr) {
                     return callback(new ServerError(), null);
