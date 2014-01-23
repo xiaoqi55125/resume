@@ -154,6 +154,7 @@ exports.upload = function (req, res, next) {
                 return callback(null, null);
             } else if (ext.indexOf("zip") != -1) {
                 var dirName        = path.basename(fileName, path.extname(fileName));
+                var originalDirName = path.basename(fn, path.extname(fn));
                 var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path + "/" + dirName + "/");
                 debugCtrller(uncompressPath);
                 var resumeDestPath = path.resolve(__dirname, "../", config.resume_dest_path);
@@ -162,8 +163,8 @@ exports.upload = function (req, res, next) {
                 var unzipResult    = execSync.exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath));
                 
                 
-                debugCtrller("mv {0}/{1}/* {2} ".format(uncompressPath, fn, resumeDestPath + "/"));
-                var mvResult       = execSync.exec("mv {0}/{1}/* {2} ".format(uncompressPath, fn, resumeDestPath + "/"));
+                debugCtrller("mv {0}/{1}/* {2} ".format(uncompressPath, originalDirName, resumeDestPath + "/"));
+                var mvResult       = execSync.exec("mv {0}/{1}/* {2} ".format(uncompressPath, originalDirName, resumeDestPath + "/"));
 
                 if (unzipResult.stderr || mvResult.stderr) {
                     return callback(new ServerError(), null);
