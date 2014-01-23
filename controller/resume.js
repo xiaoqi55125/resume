@@ -141,7 +141,7 @@ exports.upload = function (req, res, next) {
         pipeHtmlFile      : function (callback) {
             debugCtrller("step pipeHtmlFile");
             var ext = path.extname(fileName);
-            if (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1) {
+            if (!ext || (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1)) {
                 var content = fs.readFileSync(uploadFilePath, { encoding : "utf8" });
                 fs.writeFileSync(transferFilePath, content, { encoding : "utf8", flag : "w+" });
                 return callback(null, null);
