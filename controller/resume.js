@@ -153,10 +153,7 @@ exports.upload = function (req, res, next) {
                 var dirName        = path.basename(fileName, path.extname(fileName));
 
                 debugCtrller("mv {0}/{1}/* {2}".format(uncompressPath, dirName, resumeDestPath + "/"));
-                var mvResult       = execSync.exec("mv {0}/{1}/* {2}".format(uncompressPath, dirName, resumeDestPath + "/"))
-
-                //clear original files
-                var rmResult = execSync.exec("rm -R {0}/*".format(uncompressPath));
+                var mvResult       = execSync.exec("mv {0}/{1}/* {2} && rm -R {3}/*".format(uncompressPath, dirName, resumeDestPath + "/", uncompressPath));
 
                 if (unzipResult.stderr || mvResult.stderr) {
                     return callback(new ServerError(), null);
