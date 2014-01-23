@@ -45,5 +45,6 @@ module.exports = function (app) {
     app.post("/signup", loginCtrller.signUp);
     
     //can't mapping router
+    app.get("/404", resumeRender.fourofour);
     app.get("*", resumeRender.fourofour);
 };
