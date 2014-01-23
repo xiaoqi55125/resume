@@ -123,12 +123,13 @@ exports.upload = function (req, res, next) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
 
-    var uploadFilePath   = path.resolve(__dirname, "../upload/", fileName);
+    var uploadFilePath   = "";
     var transferFilePath = path.resolve(__dirname, "../", config.uncompress_file_path, fileName);
 
     async.series({
         renameUploadFile  : function (callback) {
             debugCtrller("step renameUploadFile");
+            uploadFilePath = path.resolve(__dirname, "../upload/", fileName);
             fs.rename(tmp_path, uploadFilePath, function (err) {
                 if (err) {
                     debugCtrller(err);
@@ -142,11 +143,14 @@ exports.upload = function (req, res, next) {
             debugCtrller("step pipeHtmlFile");
             var ext = path.extname(fileName);
             if (!ext || (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1)) {
+                uploadFilePath = path.resolve(__dirname, "../upload/", fileName);
                 var content = fs.readFileSync(uploadFilePath);
                 fs.writeFileSync(transferFilePath, content);
 
                 return callback(null, null);
             } else if (ext.indexOf("zip") != -1) {
+                fileName = "{0}_{1}.{2}".format(fileName, new Date().now(), path.extname(fileName));
+                uploadFilePath = path.resolve(__dirname, "../upload/", fileName);
                 var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path);
                 var resumeDestPath = path.resolve(__dirname, "../", config.resume_dest_path);
                 var unzipResult    = execSync.exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath));
@@ -182,7 +186,6 @@ exports.upload = function (req, res, next) {
     },
     function (err, results) {
         debugCtrller("enter callback");
-        execSync.exec("rm -rf {0}/*".format(uncompressPath));
         if (err || !results) {
             return res.send(resUtil.generateRes(null, err.statusCode));
         }
