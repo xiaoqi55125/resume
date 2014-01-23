@@ -149,7 +149,7 @@ exports.upload = function (req, res, next) {
 
                 return callback(null, null);
             } else if (ext.indexOf("zip") != -1) {
-                fileName = "{0}_{1}.{2}".format(fileName, new Date().now(), path.extname(fileName));
+                fileName = "{0}_{1}.{2}".format(fileName, Date.now(), path.extname(fileName));
                 uploadFilePath = path.resolve(__dirname, "../upload/", fileName);
                 var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path);
                 var resumeDestPath = path.resolve(__dirname, "../", config.resume_dest_path);
