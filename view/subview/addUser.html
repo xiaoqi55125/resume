@@ -1,13 +1,12 @@
 <head>
 <!-- script -->
-<%- Loader()
+<%- Loader("/public/javascript/addUser.min.js")
 	.js("/public/javascript/bootbox.min.js")
-	.js("/public/javascript/index.js")
 	.js("/public/lib/jquery/jquery.simplePagination.js")
 	.done(assets)
 	%>
 <!-- style -->
-<%- Loader()
+<%- Loader("/public/stylesheet/login.min.css")
 	.css("/public/stylesheet/login.css")
 	.done(assets)
 	%></head>
