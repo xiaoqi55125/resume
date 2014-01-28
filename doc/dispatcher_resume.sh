@@ -13,6 +13,8 @@ git clone https://github.com/xiaoqi55125/resume.git
 
 cd resume
 
+sudo chmod u+x bin/combo
+
 git clone https://github.com/yangyraaron/resumeanalysis  bin/resumeanalysis
 
 python bin/resumeanalysis/install.py
