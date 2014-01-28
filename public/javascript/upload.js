@@ -33,13 +33,20 @@ function loadAjaxUpload() {
                 var tempLog = "";
                 if (response.data.err) {
                     $("#logErrAndDup").show();
-                    tempLog += "<p>错误信息</p>"
-                    tempLog += "<p>" + response.data.err + "</p>";
+                    tempLog += "<p>错误信息</p>";
+                    for (var i = 0; i < response.data.err.length; i++) {
+                        tempLog += "<p>" + response.data.err[i].dateTime+"--";
+                        tempLog +=response.data.err[i].resumeName + "</p>";
+                    };
+                    
                 }
                 if (response.data.dup) {
                     $("#logErrAndDup").show();
-                    tempLog += "<p>重复信息</p>"
-                    tempLog += "<p>" + response.data.dup + "</p>";
+                    tempLog += "<p>重复信息</p>";
+                    for (var i = 0; i < response.data.dup.length; i++) {
+                        tempLog += "<p>" + response.data.dup[i].dateTime+"--";
+                        tempLog +=response.data.dup[i].resumeName + "</p>";
+                    };
                 }
                 $("#showDetail").append(tempLog);
             }
