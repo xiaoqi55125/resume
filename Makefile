@@ -1,4 +1,4 @@
 install:
 		
 build:
-		@./bin/combo views . 
+		@./bin/combo view . 
