@@ -51,6 +51,16 @@ exports.query = function (req, res, next) {
             conditions.query.userName = new RegExp(userName, "i");
         }
 
+        if (req.body.college) {
+            var college = sanitize(sanitize(req.body.college).trim()).xss();
+            conditions.query.education.college = new RegExp(college, "i");
+        }
+
+        if (req.body.company) {
+            var company = sanitize(sanitize(req.body.company).trim()).xss();
+            conditions.query.experiences.company = new RegExp(company, "i");
+        }
+
         if (req.body.pageSize && req.body.pageIndex) {
             
             var pageSize = req.body.pageSize || config.default_page_size;
