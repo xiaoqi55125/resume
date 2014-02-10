@@ -274,7 +274,11 @@ exports.sourceFile = function (req, res, next) {
 
     var isFileExists = fs.existsSync(originalFullPath);
     if (isFileExists) {
-        return res.send(fs.readFileSync(originalFullPath));
+        res.set({
+            "Content-Type" : "text/html"
+        });
+        // return res.send(fs.readFileSync(originalFullPath));
+        return res.sendfile(originalFullPath);
     } else {
         return res.redirect("/404");
     }
