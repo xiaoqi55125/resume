@@ -48,7 +48,7 @@ exports.query = function (req, res, next) {
     try {
         if (req.body.userName) {
             var userName = sanitize(sanitize(req.body.userName).trim()).xss();
-            conditions.query.userName = "/" + userName + "/i";
+            conditions.query.userName = new RegExp(userName, "i");
         }
 
         if (req.body.pageSize && req.body.pageIndex) {
