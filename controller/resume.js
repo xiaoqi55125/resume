@@ -271,6 +271,7 @@ exports.sourceFile = function (req, res, next) {
 
     debugCtrller(prefixPath + realName);
 
+    res.charset = "gb2312";
     return res.sendfile(prefixPath + realName);
 };
 
