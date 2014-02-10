@@ -275,7 +275,7 @@ exports.sourceFile = function (req, res, next) {
     var isFileExists = fs.existsSync(originalFullPath);
     if (isFileExists) {
         res.set({
-            "Content-Type" : "text/plain"
+            "Content-Type" : "text/html"
         });
         // return res.send(fs.readFileSync(originalFullPath));
         return res.send(fs.readFileSync(originalFullPath));
