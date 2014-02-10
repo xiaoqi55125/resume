@@ -114,6 +114,7 @@ exports.upload = function (req, res, next) {
 
     var fn  = req.files.file_source.name || "";
     var tmp_path  = req.files.file_source.path || "";
+    res.setHeader('content-type', 'text/html');
 
     try {
         check(fn).notEmpty();
