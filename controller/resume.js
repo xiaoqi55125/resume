@@ -257,7 +257,6 @@ exports.sourceFile = function (req, res, next) {
 
     for (var i = 0; i < tmpFileNameArr.length; i++) {
         var fullPath = absoluteDirPath + "/" + tmpFileNameArr[i];
-        debugCtrller(fullPath);
         if (fs.existsSync(fullPath)) {
             realName = tmpFileNameArr[i];
             break;
@@ -270,14 +269,14 @@ exports.sourceFile = function (req, res, next) {
         return res.redirect("/404");
     }
 
-    var originalFullPath = prefixPath + realName;
-    debugCtrller(originalFullPath);
+    var originalFullPath = absoluteDirPath + "/" + realName;
+    debugCtrller("originalFullPath :" + originalFullPath);
 
     var isFileExists = fs.existsSync();
     if (isFileExists) {
         return res.send(fs.readFileSync(originalFullPath));
     } else {
-        return next(new PageNotFoundError());
+        return res.redirect("/404");
     }
 
 };
