@@ -278,7 +278,8 @@ exports.sourceFile = function (req, res, next) {
             "Content-Type" : "text/html"
         });
         // return res.send(fs.readFileSync(originalFullPath));
-        return res.send(fs.readFileSync(originalFullPath));
+        // return res.send(fs.readFileSync(originalFullPath));
+        return fs.createReadStream(originalFullPath).pipe(res);
     } else {
         return res.redirect("/404");
     }
