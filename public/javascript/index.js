@@ -32,7 +32,9 @@ function resumeSearch(pageIndex) {
         data: {
             'pageSize': 10,
             'pageIndex': pageIndex,
-            'userName': $("#userName").val()
+            'userName': $("#userName").val(),
+            'college':$("#userCollege").val(),
+            'company':$("#userCompany").val(),
         },
         success: function(data) {
             if (data.statusCode === 0) {
