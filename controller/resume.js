@@ -272,7 +272,7 @@ exports.sourceFile = function (req, res, next) {
     var originalFullPath = absoluteDirPath + "/" + realName;
     debugCtrller("originalFullPath :" + originalFullPath);
 
-    var isFileExists = fs.existsSync();
+    var isFileExists = fs.existsSync(originalFullPath);
     if (isFileExists) {
         return res.send(fs.readFileSync(originalFullPath));
     } else {
