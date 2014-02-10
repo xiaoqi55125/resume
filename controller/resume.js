@@ -237,7 +237,7 @@ exports.upload = function (req, res, next) {
  */
 exports.sourceFile = function (req, res, next) {
     debugCtrller("controller/resume/sourceFile");
-    var prefixPath = "./bin/resumeanalysis/log/exported/";
+    var prefixPath = "./bin/resumeanalysis/log/target/";
     var absoluteDirPath = path.resolve(__dirname , "../", prefixPath);
 
     var fileName = req.params.fileName;
@@ -270,10 +270,16 @@ exports.sourceFile = function (req, res, next) {
         return res.redirect("/404");
     }
 
-    debugCtrller(prefixPath + realName);
+    var originalFullPath = prefixPath + realName;
+    debugCtrller(originalFullPath);
 
-    res.charset = "gb2312";
-    return res.sendfile(prefixPath + realName);
+    var isFileExists = fs.existsSync();
+    if (isFileExists) {
+        return res.send(fs.readFileSync(originalFullPath));
+    } else {
+        return next(new PageNotFoundError());
+    }
+
 };
 
 /**
