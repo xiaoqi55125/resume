@@ -33,6 +33,7 @@ var Users  = models.users;
  */
 exports.getResumeWithConditions = function (conditions, callback) {
     debugProxy("/proxy/resume/getResumeWithConditions");
+    debugProxy(conditions.query);
     var query = Users.find(conditions.query).select();
 
     if (conditions.pagingInfo) {

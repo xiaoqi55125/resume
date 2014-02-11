@@ -60,7 +60,7 @@ exports.query = function (req, res, next) {
         if (req.body.company) {
             var company = sanitize(sanitize(req.body.company).trim()).xss();
             // conditions.query.experiences = {};
-            conditions.query.["experiences.company"] = new RegExp(company, "i");
+            conditions.query["experiences.company"] = new RegExp(company, "i");
         }
 
         if (req.body.pageSize && req.body.pageIndex) {
