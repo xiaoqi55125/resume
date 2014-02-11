@@ -31,7 +31,7 @@ var mailServie = require("../service/mail");
  * @return {null}     
  */
 exports.appErrorProcess = function (app) {
-    //config for production env
+    //config for all env
     app.configure(function () {
         //error hanlder
         app.use(function(err, req, res, next) {
