@@ -31,11 +31,10 @@ var mailServie = require("../service/mail");
  * @return {null}     
  */
 exports.appErrorProcess = function (app) {
-        //config for production env
-        app.configure(function () {
-            //error hanlder
+    //config for production env
+    app.configure(function () {
+        //error hanlder
         app.use(function(err, req, res, next) {
-            console.log("enter error handler");
             if (err instanceof PageNotFoundError) {
                 return res.render("error/404");
             } else if (err instanceof ServerError) {
