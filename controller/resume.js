@@ -291,7 +291,7 @@ exports.sourceFile = function (req, res, next) {
         // return res.send(fs.readFileSync(originalFullPath));
         return fs.createReadStream(originalFullPath).pipe(res);
     } else {
-        return res.redirect("/404");
+        return next(new PageNotFoundError());
     }
 
 };
