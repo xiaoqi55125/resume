@@ -247,7 +247,7 @@ exports.upload = function (req, res, next) {
  */
 exports.sourceFile = function (req, res, next) {
     debugCtrller("controller/resume/sourceFile");
-    var prefixPath = "./bin/resumeanalysis/log/target/";
+    var prefixPath = "./bin/resumeanalysis/log/exported/";
     var absoluteDirPath = path.resolve(__dirname , "../", prefixPath);
 
     var fileName = req.params.fileName;
