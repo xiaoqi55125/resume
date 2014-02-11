@@ -53,14 +53,14 @@ exports.query = function (req, res, next) {
 
         if (req.body.college) {
             var college = sanitize(sanitize(req.body.college).trim()).xss();
-            conditions.query.education = {};
-            conditions.query.education.college = new RegExp(college, "i");
+            // conditions.query.education = {};
+            conditions.query["education.college"] = new RegExp(college, "i");
         }
 
         if (req.body.company) {
             var company = sanitize(sanitize(req.body.company).trim()).xss();
-            conditions.query.experiences = {};
-            conditions.query.experiences.company = new RegExp(company, "i");
+            // conditions.query.experiences = {};
+            conditions.query.["experiences.company"] = new RegExp(company, "i");
         }
 
         if (req.body.pageSize && req.body.pageIndex) {
