@@ -5,6 +5,11 @@
 #Date       : 16/1/2014
 #Desc       : a script to install resume
 
+#for convert encoding
+sudo apt-get install convmv
+
+# sudo apt-get install p7zip-full
+
 cd ~
 
 rm -R resume
