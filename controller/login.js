@@ -162,16 +162,16 @@ exports.signUp = function (req, res, next) {
     ],  function (err, results) {
         if (err) {
             debugCtrller(err);
-            return res.send(resUtil.generateRes(null, err.statusCode));
+            return res.send("0");
         }
 
         if (results) {
             debugCtrller("user has existed");
-            return res.send(resUtil.generateRes(0, config.statusCode.STATUS_OK));
+            return res.send("2");
         }
 
         debugCtrller("signUp success");
-        return res.send(resUtil.generateRes(1, config.statusCode.STATUS_OK));
+        return res.send("1");
     });
     
 };
