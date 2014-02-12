@@ -78,6 +78,13 @@ exports.signIn = function (req, res, next) {
         var salt      = SHA256(userName).toString();
         var encryptPwd = SHA3(passwd + salt).toString();
 
+        debugCtrller("----> salt: %s", salt);
+        debugCtrller("----> encryptPwd: %s", encryptPwd);
+
+        debugCtrller("user name :" + userAuthInfo.userName);
+        debugCtrller("salt : %s", userAuthInfo.salt);
+        debugCtrller("encrypt pwd : %s", userAuthInfo.encryptPwd);
+
         //check
         if (userName === userAuthInfo.userName && salt === userAuthInfo.salt 
             && encryptPwd === userAuthInfo.encryptPwd) {

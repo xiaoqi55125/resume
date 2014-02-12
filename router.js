@@ -38,10 +38,12 @@ module.exports = function (app) {
     app.get("/resume/source/:fileName", resumeCtrller.sourceFile);
     app.get("/login",resumeRender.showLogin);
     app.get("/addUser",resumeRender.addUser);
+    
 
     //api 
     app.post("/resume/query", resumeCtrller.query);
     app.post("/resume/upload", resumeCtrller.upload);
+    app.get("/captchaImg", loginCtrller.captchaImg);
     app.post("/signin", loginCtrller.signIn);
     app.post("/signup", loginCtrller.signUp);
     
