@@ -37,9 +37,9 @@ var execSync = require("execSync");
  * @param  {Object}   req  the instance of request
  * @param  {Object}   res  the instance of response
  * @param  {Function} next the next handler
- * @return {null}        
+ * @return {null}
  */
-exports.query = function (req, res, next) {
+exports.query = function(req, res, next) {
     debugCtrller("/controller/resume/query");
 
     var conditions   = {};
@@ -62,24 +62,24 @@ exports.query = function (req, res, next) {
         }
 
         if (req.body.pageSize && req.body.pageIndex) {
-            
-            var pageSize = req.body.pageSize || config.default_page_size;
-            var pageIndex = req.body.pageIndex || 1;
-            pageSize = sanitize(sanitize(pageSize).trim()).xss();
-            pageIndex = sanitize(sanitize(pageIndex).trim()).xss();
 
-            conditions.pagingInfo = {};
-            conditions.pagingInfo.pageSize = pageSize;
+            var pageSize  = req.body.pageSize || config.default_page_size;
+            var pageIndex = req.body.pageIndex || 1;
+            pageSize      = sanitize(sanitize(pageSize).trim()).xss();
+            pageIndex     = sanitize(sanitize(pageIndex).trim()).xss();
+
+            conditions.pagingInfo           = {};
+            conditions.pagingInfo.pageSize  = pageSize;
             conditions.pagingInfo.pageIndex = pageIndex;
         }
 
     } catch (e) {
         return res.send(resUtil.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
-    
+
     async.series({
-        query   :   function (callback) {
-            Resume.getResumeWithConditions(conditions, function (err, result) {
+        query: function(callback) {
+            Resume.getResumeWithConditions(conditions, function(err, result) {
                 if (err) {
                     return callback(new DBError(), null);
                 }
@@ -87,8 +87,8 @@ exports.query = function (req, res, next) {
                 callback(null, result);
             });
         },
-        count   :   function (callback) {
-            Resume.getResumeCountWithConditions(conditions, function (err, result) {
+        count: function(callback) {
+            Resume.getResumeCountWithConditions(conditions, function(err, result) {
                 if (err) {
                     return callback(new DBError(), null);
                 }
@@ -96,8 +96,8 @@ exports.query = function (req, res, next) {
                 callback(null, result);
             });
         }
-    }, function (err, results) {
-         if (err) {
+    }, function(err, results) {
+        if (err) {
             debugCtrller(err);
             return res.send(resUtil.generateRes(null, err.statusCode));
         }
@@ -107,9 +107,9 @@ exports.query = function (req, res, next) {
         data.total = results.count;
 
         return res.send(resUtil.generateRes(data, config.statusCode.STATUS_OK));
-        
+
     });
-    
+
 };
 
 /**
@@ -117,13 +117,13 @@ exports.query = function (req, res, next) {
  * @param  {Object}   req  the instance of request
  * @param  {Object}   res  the instance of response
  * @param  {Function} next the next handler
- * @return {null}        
+ * @return {null}
  */
-exports.upload = function (req, res, next) {
+exports.upload = function(req, res, next) {
     debugCtrller("/controller/resume/upload");
 
-    var fn  = req.files.file_source.name || "";
-    var tmp_path  = req.files.file_source.path || "";
+    var fn = req.files.file_source.name || "";
+    var tmp_path = req.files.file_source.path || "";
     res.setHeader('content-type', 'text/html');
 
     try {
@@ -136,106 +136,110 @@ exports.upload = function (req, res, next) {
 
     var ext = path.extname(fn);
     var fileName = fn;
-    if (ext.indexOf("zip") != -1){
+    if (ext.indexOf("zip") != -1) {
         fileName = path.basename(fileName, path.extname(fileName)) + "_" + Date.now() + path.extname(fileName);
         debugCtrller(fileName);
     }
 
-    var uploadFilePath   = path.resolve(__dirname, "../upload/", fileName);
+    var uploadFilePath = path.resolve(__dirname, "../upload/", fileName);
     var transferFilePath = path.resolve(__dirname, "../", config.resume_dest_path, fileName);
 
     async.series({
-        renameUploadFile  : function (callback) {
-            debugCtrller("step renameUploadFile");
-            fs.rename(tmp_path, uploadFilePath, function (err) {
-                if (err) {
-                    debugCtrller(err);
-                    return callback(new ServerError(), null);
+            renameUploadFile: function(callback) {
+                debugCtrller("step renameUploadFile");
+                fs.rename(tmp_path, uploadFilePath, function(err) {
+                    if (err) {
+                        debugCtrller(err);
+                        return callback(new ServerError(), null);
+                    }
+
+                    callback(null, null);
+                });
+            },
+            pipeHtmlFile: function(callback) {
+                debugCtrller("step pipeHtmlFile");
+                debugCtrller(uploadFilePath);
+                debugCtrller(transferFilePath);
+                if (!ext || (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1)) {
+                    var content = fs.readFileSync(uploadFilePath);
+                    fs.writeFileSync(transferFilePath, content);
+
+                    return callback(null, null);
+                } else if (ext.indexOf("zip") != -1) {
+                    var dirName         = path.basename(fileName, path.extname(fileName));
+                    var originalDirName = path.basename(fn, path.extname(fn));
+                    var uncompressPath  = path.resolve(__dirname, "../", config.uncompress_file_path + "/" + dirName + "/");
+                    debugCtrller(uncompressPath);
+                    var resumeDestPath  = path.resolve(__dirname, "../", config.resume_dest_path);
+                    debugCtrller(resumeDestPath);
+                    debugCtrller("unzip {0} -dj {1}".format(uploadFilePath, uncompressPath));
+                    var unzipResult     = execSync.exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath));
+
+
+                    debugCtrller("mv {0}/* {1} ".format(uncompressPath, resumeDestPath + "/"));
+                    var mvResult = execSync.exec("mv {0}/* {1} ".format(uncompressPath, resumeDestPath + "/"));
+
+                    if (unzipResult.stderr || mvResult.stderr) {
+                        return callback(new ServerError(), null);
+                    } else {
+                        return callback(null, null);
+                    }
+
+                } else {
+                    return callback(new InvalidParamError(), null);
                 }
+            },
+            runShell: function(callback) {
+                debugCtrller("step runShell");
+                var mainAnalysisScript = path.resolve(__dirname, "../", config.analysis_mainscript_path);
+                var result             = execSync.exec("python {0}".format(mainAnalysisScript));
 
-                callback(null, null);
-            });
-        },
-        pipeHtmlFile      : function (callback) {
-            debugCtrller("step pipeHtmlFile");
-            debugCtrller(uploadFilePath);
-            debugCtrller(transferFilePath);
-            if (!ext || (ext.indexOf("htm") != -1 || ext.indexOf("html") != -1)) {
-                var content = fs.readFileSync(uploadFilePath);
-                fs.writeFileSync(transferFilePath, content);
-
-                return callback(null, null);
-            } else if (ext.indexOf("zip") != -1) {
-                var dirName        = path.basename(fileName, path.extname(fileName));
-                var originalDirName = path.basename(fn, path.extname(fn));
-                var uncompressPath = path.resolve(__dirname, "../", config.uncompress_file_path + "/" + dirName + "/");
-                debugCtrller(uncompressPath);
-                var resumeDestPath = path.resolve(__dirname, "../", config.resume_dest_path);
-                debugCtrller(resumeDestPath);
-                debugCtrller("unzip {0} -d {1}".format(uploadFilePath, uncompressPath));
-                var unzipResult    = execSync.exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath));
-                
-                
-                debugCtrller("mv {0}/{1}/* {2} ".format(uncompressPath, originalDirName, resumeDestPath + "/"));
-                var mvResult       = execSync.exec("mv {0}/{1}/* {2} ".format(uncompressPath, originalDirName, resumeDestPath + "/"));
-
-                if (unzipResult.stderr || mvResult.stderr) {
+                if (result.stderr) {
                     return callback(new ServerError(), null);
+                } else if (result.stdout) {
+                    var filePath = result.stdout.replace(/[\r\n]/g, "");
+                    return callback(null, filePath);
                 } else {
                     return callback(null, null);
                 }
-
-            } else {
-                return callback(new InvalidParamError(), null);
             }
         },
-        runShell          : function (callback) {
-            debugCtrller("step runShell");
-            var mainAnalysisScript = path.resolve(__dirname, "../", config.analysis_mainscript_path);
-            var result = execSync.exec("python {0}".format(mainAnalysisScript));
-
-            if (result.stderr) {
-                return callback(new ServerError(), null);
-            } else if (result.stdout) {
-                var filePath = result.stdout.replace(/[\r\n]/g, "");
-                return callback(null, filePath);
-            } else {
-                return callback(null, null);
-            }
-        }
-    },
-    function (err, results) {
-        debugCtrller("enter callback");
-        if (err || !results) {
-            return res.send(resUtil.generateRes(null, err.statusCode));
-        }
-
-        if (results.runShell) {
-            var filePathStr = results.runShell;
-            debugCtrller(filePathStr);
-            var pathObj = handlerStdoutFilePath(filePathStr);
-            var contentObj = {
-                err     : [],
-                dup     : []
-            };
-
-            if (pathObj && pathObj.err && fs.existsSync(pathObj.err)) {
-                var content    = fs.readFileSync(pathObj.err, { encoding : "utf8" });
-                contentObj.err = reformatFileContent(content);
-            } 
-
-            if (pathObj && pathObj.dup && fs.existsSync(pathObj.dup)) {
-                var content    = fs.readFileSync(pathObj.dup, { encoding : "utf8" });
-                contentObj.dup = reformatFileContent(content);
+        function(err, results) {
+            debugCtrller("enter callback");
+            if (err || !results) {
+                return res.send(resUtil.generateRes(null, err.statusCode));
             }
 
-            
-            return res.send(resUtil.generateRes(contentObj, config.statusCode.STATUS_OK));
-        }
+            if (results.runShell) {
+                var filePathStr = results.runShell;
+                debugCtrller(filePathStr);
+                var pathObj = handlerStdoutFilePath(filePathStr);
+                var contentObj = {
+                    err: [],
+                    dup: []
+                };
 
-        return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
-    });
-    
+                if (pathObj && pathObj.err && fs.existsSync(pathObj.err)) {
+                    var content = fs.readFileSync(pathObj.err, {
+                        encoding: "utf8"
+                    });
+                    contentObj.err = reformatFileContent(content);
+                }
+
+                if (pathObj && pathObj.dup && fs.existsSync(pathObj.dup)) {
+                    var content = fs.readFileSync(pathObj.dup, {
+                        encoding: "utf8"
+                    });
+                    contentObj.dup = reformatFileContent(content);
+                }
+
+
+                return res.send(resUtil.generateRes(contentObj, config.statusCode.STATUS_OK));
+            }
+
+            return res.send(resUtil.generateRes(null, config.statusCode.STATUS_OK));
+        });
+
 };
 
 /**
@@ -243,12 +247,12 @@ exports.upload = function (req, res, next) {
  * @param  {Object}   req  the instance of request
  * @param  {Object}   res  the instance of response
  * @param  {Function} next the next handler
- * @return {null}        
+ * @return {null}
  */
-exports.sourceFile = function (req, res, next) {
+exports.sourceFile = function(req, res, next) {
     debugCtrller("controller/resume/sourceFile");
-    var prefixPath = "./bin/resumeanalysis/log/exported/";
-    var absoluteDirPath = path.resolve(__dirname , "../", prefixPath);
+    var prefixPath      = "./bin/resumeanalysis/log/exported/";
+    var absoluteDirPath = path.resolve(__dirname, "../", prefixPath);
 
     var fileName = req.params.fileName;
     if (!fileName) {
@@ -257,10 +261,10 @@ exports.sourceFile = function (req, res, next) {
 
     debugCtrller(fileName);
 
-    var extArr = [ "", ".htm", ".html" ];
+    var extArr = ["", ".htm", ".html"];
 
-    var tmpFileNameArr = extArr.map(function (item) {
-         return fileName + item;
+    var tmpFileNameArr = extArr.map(function(item) {
+        return fileName + item;
     });
 
     var realName;
@@ -285,7 +289,7 @@ exports.sourceFile = function (req, res, next) {
     var isFileExists = fs.existsSync(originalFullPath);
     if (isFileExists) {
         res.set({
-            "Content-Type" : "text/html"
+            "Content-Type": "text/html"
         });
         // return res.send(fs.readFileSync(originalFullPath));
         // return res.send(fs.readFileSync(originalFullPath));
@@ -301,16 +305,16 @@ exports.sourceFile = function (req, res, next) {
  * @param  {String} stdout        the shell's stdout
  * @return {Object}     the process object
  */
-function handlerStdoutFilePath (stdout) {
+function handlerStdoutFilePath(stdout) {
     if (!stdout) {
         return null;
     }
 
     var fileArr = stdout.split(" ");
-    var result = {};
+    var result  = {};
 
     for (var i = 0; i < fileArr.length; i++) {
-        if (fileArr[i].indexOf("err") != -1 ) {
+        if (fileArr[i].indexOf("err") != -1) {
             result.err = fileArr[i];
         }
 
@@ -327,7 +331,7 @@ function handlerStdoutFilePath (stdout) {
  * @param  {String} content the content's str
  * @return {Array}         processed array
  */
-function reformatFileContent (content) {
+function reformatFileContent(content) {
     var lines = content.split(/[\r\n]/g);
 
     if (!lines || lines.length === 0) {
@@ -337,7 +341,7 @@ function reformatFileContent (content) {
     //process last line
     var lastLine = lines[lines.length - 1];
     if (lastLine || lastLine.length === 0) {
-        lines.pop();        //remove
+        lines.pop(); //remove
     }
 
     return lines.map(splitFieldPerLine);
@@ -348,7 +352,7 @@ function reformatFileContent (content) {
  * @param  {String} lineContent the content of every line
  * @return {Object}             the splited obj
  */
-function splitFieldPerLine (lineContent) {
+function splitFieldPerLine(lineContent) {
     if (!lineContent) {
         return {};
     }
@@ -360,8 +364,8 @@ function splitFieldPerLine (lineContent) {
     }
 
     return {
-        dateTime : splitedArr[0] + " " + splitedArr[1],
-        resumeName : removePrefixPath(splitedArr[2])
+        dateTime: splitedArr[0] + " " + splitedArr[1],
+        resumeName: removePrefixPath(splitedArr[2])
     };
 }
 
@@ -370,7 +374,7 @@ function splitFieldPerLine (lineContent) {
  * @param  {String} resumePath resume file's path
  * @return {String}            resume file name
  */
-function removePrefixPath (resumePath) {
+function removePrefixPath(resumePath) {
     if (!resumePath) {
         return "";
     }
@@ -379,6 +383,6 @@ function removePrefixPath (resumePath) {
     if (index === -1) {
         return resumePath;
     }
-    
+
     return resumePath.substring(index + 1, resumePath.length);
 }
