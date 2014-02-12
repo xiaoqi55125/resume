@@ -175,6 +175,8 @@ exports.upload = function(req, res, next) {
                     debugCtrller("unzip -j {0} -d {1}".format(uploadFilePath, uncompressPath));
                     var unzipResult     = execSync.exec("unzip -j {0} -d {1}".format(uploadFilePath, uncompressPath));
 
+                    debugCtrller("do conver encoding :" + "convmv -f cp936 -t utf8 -r --notest -- {0}/*".format(uncompressPath));
+                    var convmvCmd       = execSync.exec("convmv -f cp936 -t utf8 -r --notest -- {0}/*".format(uncompressPath));
 
                     debugCtrller("mv {0}/* {1} ".format(uncompressPath, resumeDestPath + "/"));
                     var mvResult = execSync.exec("mv {0}/* {1} ".format(uncompressPath, resumeDestPath + "/"));
