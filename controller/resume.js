@@ -172,8 +172,8 @@ exports.upload = function(req, res, next) {
                     debugCtrller(uncompressPath);
                     var resumeDestPath  = path.resolve(__dirname, "../", config.resume_dest_path);
                     debugCtrller(resumeDestPath);
-                    debugCtrller("unzip {0} -dj {1}".format(uploadFilePath, uncompressPath));
-                    var unzipResult     = execSync.exec("unzip {0} -d {1}".format(uploadFilePath, uncompressPath));
+                    debugCtrller("unzip -j {0} -d {1}".format(uploadFilePath, uncompressPath));
+                    var unzipResult     = execSync.exec("unzip -j {0} -d {1}".format(uploadFilePath, uncompressPath));
 
 
                     debugCtrller("mv {0}/* {1} ".format(uncompressPath, resumeDestPath + "/"));
