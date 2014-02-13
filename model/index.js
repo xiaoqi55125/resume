@@ -36,4 +36,4 @@ require("./user");
 require("./login");
 
 exports.users     = mongoose.model("users");
-exports.loginInfo = mongoose.model("loginInfo");
+exports.loginInfo = mongoose.model("loginInfos");

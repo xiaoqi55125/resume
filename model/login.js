@@ -32,4 +32,4 @@ var LoginInfoSChema = new Schema({
     lastLoginTime   : { type : Date, default : Date.now }
 });
 
-mongoose.model("loginInfo", LoginInfoSChema);
+mongoose.model("loginInfos", LoginInfoSChema);
