@@ -169,15 +169,20 @@ exports.upload = function(req, res, next) {
                     var dirName         = path.basename(fileName, path.extname(fileName));
                     var originalDirName = path.basename(fn, path.extname(fn));
                     var uncompressPath  = path.resolve(__dirname, "../", config.uncompress_file_path + "/" + dirName + "/");
+
+                    if (uncompressPath === "/") {
+                        return callback(null, null);
+                    }
+
                     debugCtrller(uncompressPath);
                     var resumeDestPath  = path.resolve(__dirname, "../", config.resume_dest_path);
                     debugCtrller(resumeDestPath);
-                    debugCtrller("unzip -j {0} -d {1}".format(uploadFilePath, uncompressPath + "/"));
-                    var unzipResult     = execSync.exec("unzip -j {0} -d {1}".format(uploadFilePath, uncompressPath + "/"));
-
+                    debugCtrller("LANG=C 7z e {0} -o{1}".format(uploadFilePath, uncompressPath + "/"));
+                    var unzipResult     = execSync.exec("LANG=C 7z e {0} -o{1}".format(uploadFilePath, uncompressPath + "/"));
                     debugCtrller("do conver encoding :" + "convmv -f cp936 -t utf8 -r --notest -- {0}/*".format(uncompressPath));
                     var convmvCmd       = execSync.exec("convmv -f cp936 -t utf8 -r --notest -- {0}/*".format(uncompressPath));
-
+                    debugCtrller("delete empty dirs :" + "find  {0}/ -type d -empty -delete".format(uncompressPath));
+                    var delEmptyDirCmd  = execSync.exec("find  {0}/ -type d -empty -delete".format(uncompressPath));
                     debugCtrller("mv {0}/* {1} ".format(uncompressPath, resumeDestPath + "/"));
                     var mvResult = execSync.exec("mv {0}/* {1} ".format(uncompressPath, resumeDestPath + "/"));
 
