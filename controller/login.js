@@ -34,6 +34,12 @@ var LoginInfo  = require("../model").loginInfo;
 var config     = require("../config").config;
 var async      = require("async");
 
+var auth_routers = [
+    "/upload",
+    "/resume",
+    "/addUser",
+];
+
 /**
  * handler sign in
  * @param  {object}   req  the request object
@@ -194,6 +200,29 @@ exports.captchaImg = function (req, res, next) {
 };
 
 /**
+ * common process : such authorize check
+ * @param  {Object}   req  the request's instance
+ * @param  {Object}   res  the instance of request
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.commonProcess = function (req, res, next) {
+    debugCtrller(req.path);
+
+    var necessaryAuth = isMatchedAuthList(req.path);
+
+    if (necessaryAuth) {
+        if (req.session && req.session.user) {
+            return next();
+        } else {
+            return res.redirect("/login");
+        }
+    } else {
+        return next();
+    }
+};
+
+/**
  * generate random number with bit num
  * @param  {Number} bitNum the random number's bit num
  * @return {String}        the string of random number's set
@@ -231,4 +260,24 @@ function processPassword (userName, hashedPwd) {
         salt        : salt,
         encryptPwd  : encryptPwd
     };
+}
+
+/**
+ * match urlPath in the auth list
+ * @param  {String}  urlPath the matching url path
+ * @return {Boolean}         if matched return true
+ */
+function isMatchedAuthList (urlPath) {
+    if (!urlPath) {
+        return true;
+    }
+
+    //match one by one
+    for (var i = 0; i < auth_routers.length; i++) {
+        if (auth_routers[i].indexOf(urlPath) != -1) {
+            return true;
+        }
+    }
+
+    return false;
 }
