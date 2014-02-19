@@ -4,3 +4,11 @@
 	width: 300px;
 	margin: 0 auto;
 }
+#captcha_div {
+  margin-top: 10px;
+}
+.form-signin .captcha{
+  width: 300px;
+  height: 60px;
+  cursor: pointer;
+}
