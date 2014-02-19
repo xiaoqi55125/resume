@@ -38,7 +38,10 @@ var auth_routers = [
     "/upload",
     "/resume",
     "/addUser",
+    "/signout"
 ];
+
+var AJAX_IDENTIFIER = "XMLHttpRequest";
 
 /**
  * handler sign in
@@ -107,6 +110,19 @@ exports.signIn = function (req, res, next) {
         }
     });
 
+};
+
+/**
+ * sign out
+ * @param  {object}   req  the instance of request
+ * @param  {object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.signOut = function (req, res, next) {
+    req.session.destroy();
+    res.clearCookie();
+    return res.redirect("/login");
 };
 
 /**
@@ -214,15 +230,26 @@ exports.captchaImg = function (req, res, next) {
  * @return {null}        
  */
 exports.commonProcess = function (req, res, next) {
-    debugCtrller(req.path);
-
     var necessaryAuth = isMatchedAuthList(req.path);
+    
+    var identifier    = req.get("X-Requested-With");
+    var isAjaxReq     = identifier && (identifier.toLowerCase() === AJAX_IDENTIFIER.toLowerCase());
 
     if (necessaryAuth) {
-        if (req.session && req.session.user) {
-            return next();
-        } else {
-            return res.redirect("/login");
+        if (isAjaxReq) {            //ajax request
+            debugCtrller("AJAX REQUEST");
+            if (req.session && req.session.user) {
+                return next();
+            } else {
+                return res.send("AUTH_ERROR");
+            }
+        } else {                    //normal request
+            debugCtrller("NORMAL REQUEST");
+            if (req.session && req.session.user) {
+                return next();
+            } else {
+                return res.redirect("/login");
+            }
         }
     } else {
         return next();
@@ -279,9 +306,14 @@ function isMatchedAuthList (urlPath) {
         return true;
     }
 
+    //handle the home / index path
+    if (urlPath === "/") {
+        return true;
+    }
+
     //match one by one
     for (var i = 0; i < auth_routers.length; i++) {
-        if (auth_routers[i].indexOf(urlPath) != -1) {
+        if (urlPath.indexOf(auth_routers[i]) != -1) {
             return true;
         }
     }
