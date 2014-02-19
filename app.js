@@ -71,7 +71,7 @@ app.configure(function () {
 });
 
 //custom middleware
-// app.use(require("./controllers/login").commonProcess);
+app.use(require("./controller/login").commonProcess);
 
 var maxAge = 3600000 * 24 * 30;
 var staticDir = path.join(__dirname, 'public');
