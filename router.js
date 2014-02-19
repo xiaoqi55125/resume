@@ -46,6 +46,7 @@ module.exports = function (app) {
     app.get("/captchaImg", loginCtrller.captchaImg);
     app.post("/signin", loginCtrller.signIn);
     app.post("/signup", loginCtrller.signUp);
+    app.get("/signout", loginCtrller.signOut);
     
     //can't mapping router
     app.get("/404", resumeRender.fourofour);
