@@ -37,6 +37,9 @@ function resumeSearch(pageIndex) {
             'company':$("#userCompany").val(),
         },
         success: function(data) {
+            if (data == "AUTH_ERROR") {
+                window.location="/login";
+            }
             if (data.statusCode === 0) {
                 changeListView(data.data.query);
                 //changeMainTextValue(data.data.query[0]);
