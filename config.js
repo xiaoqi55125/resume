@@ -72,7 +72,7 @@ exports.config = {
     /******************************system config **************************/
     default_page_size : 50,
 
-    db                : "mongodb://172.16.206.16/resume",
+    db                : "mongodb://172.16.206.31/resume",
 
     statusCode        : {
         STATUS_OK                 : 0,

@@ -52,3 +52,27 @@ pm2 kill
 #more detail see: docs/node_install_ubuntu.sh
 NODE_ENV=$NODE_ENV pm2 start app.js -x -f
 
+#if connect error, make sure :
+#mongodb host and port(allow)
+#has `resume` db in mongodb 
+#if it not exists : 
+#`use resume`
+#`db.users.insert({'name':'test'});`
+#
+#if can not connect , pls check mongodb config file (at /etc/mongod.conf)
+#eidt the config item :bind_ip 
+#from 
+#127.0.0.1
+#to
+#current visiable ip
+#
+
+#if web server has be started, but can not login
+#pls create a `logininfos` db
+#and init a super administrator account
+#`use logininfos`
+#db.logininfos.insert({'userName':'a', 'salt':'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb', 'encryPwd':'5d12dc5a67ea2f58163feceacaa146af633b1a828bfafcbc8669d80c178e50d98b966a9b86bd7eabf0954020c47d869cb169fa697115451db12933ca9af7cac9', 'lastLoginTime':''});
+
+#change config file list below:
+#/rootDir/config.js
+#/rootDir/bin/resumeanalysis/setting.py

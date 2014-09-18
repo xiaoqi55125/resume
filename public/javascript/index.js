@@ -50,7 +50,9 @@ function resumeSearch(pageIndex) {
                         itemsOnPage: 10,
                         currentPage: pageIndex,
                         cssStyle: 'light-theme',
-                        displayedPages: 0,
+                        prevText: '上一页',
+                        nextText: '下一页',
+                        displayedPages: 10,
                         edges: 0,
                         onPageClick: function(pageNum) {
                             resumeSearch(pageNum);

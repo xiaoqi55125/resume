@@ -48,7 +48,7 @@ var app          = express();
 //config for all env
 app.configure(function () {
     app.set('view engine', 'html');
-    app.set('views', path.join(__dirname, 'view'));
+    app.set('view', path.join(__dirname, 'view'));
     // app.set("view options", {layout : false});
     app.engine('html', require('ejs').renderFile);
 
