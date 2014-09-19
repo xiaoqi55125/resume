@@ -92,7 +92,7 @@ function changeMainTextValue(data) {
     //college
     $("#college").html(data.education.college);
     $("#degree").html(data.education.degree);
-    $("#graduatedTime").html(data.education.graduatedTime);
+    $("#graduatedTime").html(data.education.graduateTime);
     $("#speciality").html(data.education.speciality);
 
     //experience
